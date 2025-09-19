@@ -2,11 +2,11 @@
 A grading platform for teachers.
 
 ## Layout
-Backend:
+#Backend:
 * Spring Boot related files
-Frontend:
+#Frontend:
 * JavaFX related files
-Database:
+#Database:
 * SQL related files
-Schema:
+#Schema:
 * Documentation and API
