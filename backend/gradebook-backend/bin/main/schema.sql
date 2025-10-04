@@ -7,7 +7,7 @@
 -- * Table for grade weighting
 -- * Table for user login stuff
 
--- Clean run each time the app is run
+-- Clean run each time the app is run. If you add a new table, update this block accordingly.
 DROP TABLE IF EXISTS Grades CASCADE;
 DROP TABLE IF EXISTS Assignments CASCADE;
 DROP TABLE IF EXISTS StudentEnrollments CASCADE;
