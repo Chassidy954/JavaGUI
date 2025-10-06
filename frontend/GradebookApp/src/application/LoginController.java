@@ -50,7 +50,7 @@ public class LoginController {
         }
 
         // 2. Placeholder/Simulated Authentication
-        // This is where you will integrate your AuthService later.
+        // This is where you will integrate your AuthService later. 
         
         if ("teacher".equals(username) && "pass".equals(password)) {
             // Authentication Success

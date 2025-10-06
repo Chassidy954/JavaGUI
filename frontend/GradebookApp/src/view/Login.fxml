@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-
 <StackPane fx:controller="application.LoginController" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
    
    <!-- Apply the 'background' class for the Anti-flash White page background -->
@@ -19,7 +18,7 @@
    <!-- Login Card Container -->
    <VBox styleClass="login-card" alignment="CENTER" maxWidth="380.0" minHeight="-Infinity" spacing="20.0">
       <children>
-         
+       
          <!-- Title Section -->
          <Label styleClass="h2-section" text="Teacher Login" />
          

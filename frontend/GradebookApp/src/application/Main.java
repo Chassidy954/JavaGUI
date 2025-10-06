@@ -8,7 +8,7 @@ import javafx.stage.Stage;
 
 public class Main extends Application {
 	@Override
-	public void start(Stage primaryStage) {
+	public void start(Stage primaryStage) { 
 		try {
 			// 1. Load FXML from the /view folder
 			Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));

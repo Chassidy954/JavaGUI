@@ -14,7 +14,7 @@
 
 /* Apply the light background to the main scene */
 .background {
-    -fx-background-color: #F4F6F6; 
+    -fx-background-color: #F4F6F6;
 }
 
 /* Class for the primary application title/logo */
