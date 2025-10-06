@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+
+<StackPane fx:controller="application.LoginController" prefHeight="600.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   
+   <!-- Apply the 'background' class for the Anti-flash White page background -->
+   <VBox styleClass="background" alignment="CENTER" maxHeight="Infinity" maxWidth="Infinity" />
+   
+   <!-- Login Card Container -->
+   <VBox styleClass="login-card" alignment="CENTER" maxWidth="380.0" minHeight="-Infinity" spacing="20.0">
+      <children>
+         
+         <!-- Title Section -->
+         <Label styleClass="h2-section" text="Teacher Login" />
+         
+         <Text fill="#34495e" styleClass="label-subtle" text="Enter your credentials to access the gradebook." textAlignment="CENTER" wrappingWidth="280.0">
+            <VBox.margin>
+               <Insets bottom="10.0" />
+            </VBox.margin>
+         </Text>
+         
+         <!-- Username Field -->
+         <TextField fx:id="usernameField" promptText="Username or Employee ID" styleClass="text-field" />
+         
+         <!-- Password Field -->
+         <PasswordField fx:id="passwordField" promptText="Password" styleClass="password-field" />
+         
+         <!-- Error Message Label (Hidden until login fails) -->
+         <Label fx:id="errorMessageLabel" style="-fx-text-fill: #E74C3C;" text="Invalid username or password." visible="false" />
+         
+         <!-- Login Button -->
+         <Button fx:id="loginButton" mnemonicParsing="false" onAction="#handleLoginButtonAction" prefWidth="1.0E9" styleClass="button-primary" text="Sign In">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+         </Button>
+         
+         <!-- Footer Link -->
+         <Button mnemonicParsing="false" onAction="#handleForgotPassword" styleClass="button-link" text="Forgot Password?" />
+         
+      </children>
+      <padding>
+         <Insets bottom="30.0" left="30.0" right="30.0" top="30.0" />
+      </padding>
+   </VBox>
+</StackPane>
