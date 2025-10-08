@@ -1,20 +1,29 @@
 package application;
 
+import java.io.IOException;
+import java.util.Optional;
+
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.event.ActionEvent;
+import javafx.stage.Stage;
+import model.Teacher; 
+import service.AuthService; 
+
+//This file still being worked on..
 
 /**
- * Controller for the Login.fxml view. Handles user authentication logic.
- * This file connects the FXML elements (like text fields and buttons) 
- * to the Java code.
+ * Controller for the Login view (Login.fxml).
+ * Handles user input and delegates authentication logic to the AuthService.
  */
 public class LoginController {
 
-    // FXML element injections (fx:id matching those in Login.fxml)
+    // FXML injected UI components
     @FXML
     private TextField usernameField;
 
@@ -22,39 +31,33 @@ public class LoginController {
     private PasswordField passwordField;
 
     @FXML
-    private Button loginButton;
-
-    @FXML
     private Label errorMessageLabel;
+    
+    // Service Instance: Dependency Injection (manually for now.)
+    private AuthService authService = new AuthService();
 
     /**
-     * Initializes the controller class. Called after the FXML has been loaded.
-     */
-    public void initialize() {
-        // Hide the error message when the application first starts
-        errorMessageLabel.setVisible(false);
-    }
-
-    /**
-     * Handles the action when the Sign In button is clicked.
+     * Handles the action when the 'Sign In' button is clicked.
      */
     @FXML
-    private void handleLoginButtonAction(ActionEvent event) {
+    public void handleLoginButtonAction(ActionEvent event) {
+        // 1. Get user input
         String username = usernameField.getText();
         String password = passwordField.getText();
-        
-        // 1. Basic Input Validation
-        if (username.isEmpty() || password.isEmpty()) {
-            displayError("Username and password are required.");
-            return;
-        }
 
-        // 2. Placeholder/Simulated Authentication
-        // This is where you will integrate your AuthService later. 
-        
-        if ("teacher".equals(username) && "pass".equals(password)) {
+        // Reset error message visibility
+        errorMessageLabel.setVisible(false);
+
+        // 2. Delegate Authentication to the Service Layer
+        Optional<Teacher> teacherResult = authService.login(username, password);
+
+        if (teacherResult.isPresent()) {
             // Authentication Success
-            System.out.println("Login successful for user: " + username);
+            Teacher authenticatedTeacher = teacherResult.get();
+            
+            System.out.println("Login successful. Teacher details: " + authenticatedTeacher); 
+            
+            // Proceed to the next scene
             loadDashboard(); 
         } else {
             // Authentication Failure
@@ -63,27 +66,51 @@ public class LoginController {
     }
     
     /**
-     * Placeholder for the forgotten password link action.
+     * Placeholder action for the Forgot Password link.
      */
     @FXML
-    private void handleForgotPassword(ActionEvent event) {
-        System.out.println("Forgot Password clicked. This function needs implementation.");
+    public void handleForgotPassword(ActionEvent event) {
+        System.out.println("Forgot Password clicked! Implement navigation to recovery page.");
+        // This is optional and may not be implemented, can be easily removed if we don't need it.
     }
 
     /**
-     * Sets the error message text and makes it visible.
+     * Displays an error message on the UI.
+     * @param message The message to display.
      */
     private void displayError(String message) {
-        // Use the error color defined in application.css (E74C3C)
         errorMessageLabel.setText(message);
         errorMessageLabel.setVisible(true);
+        passwordField.clear(); // Clear password field for security
     }
     
     /**
-     * Placeholder method to switch scenes after successful login.
-     * TO DO: Implement actual scene switching logic.
+     * Loads the main application dashboard scene upon successful login.
+     * Note: This is a placeholder and doesn't pass the Teacher model yet.
      */
     private void loadDashboard() {
-        System.out.println("--- Login Successful! Transitioning to Dashboard ---");
+        try {
+            // Just began work on the teacher dashboard for login!! that will be placed here eventually
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml")); 
+            Parent dashboardRoot = loader.load();
+            
+            // Get the current stage from any element (e.g., the username field's scene)
+            Stage stage = (Stage) usernameField.getScene().getWindow();
+            
+            // Create and set the new scene
+            Scene scene = new Scene(dashboardRoot, 800, 600);
+            
+            // Re-apply the application-wide stylesheet to the new scene
+            scene.getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());
+            
+            stage.setScene(scene);
+            stage.setTitle("Gradebook - Teacher Dashboard"); // Update window title
+            stage.show();
+            
+        } catch (IOException e) {
+            e.printStackTrace();
+            // Fallback error display
+            displayError("Error loading the next screen.");
+        }
     }
 }

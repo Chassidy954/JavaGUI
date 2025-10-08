@@ -90,7 +90,7 @@
     -fx-background-color: #27ae60; /* Slightly darker emerald */
 }
 
-/* Style for link buttons (like "Sign up" or "Forgot Password") */
+/* Style for link buttons (like "Sign up" or "Forgot Password"), can be removed if we end up not adding these. */
 .button-link {
     -fx-background-color: transparent;
     -fx-text-fill: #16A085;
@@ -99,7 +99,7 @@
     -fx-cursor: hand;
 }
 
-/* Hover effect for link buttons */
+/* Hover effect for link buttons, can also be removed if we dont add link buttons */
 .button-link:hover {
     -fx-text-fill: #138a6d; /* Slightly darker zomp */
 }
