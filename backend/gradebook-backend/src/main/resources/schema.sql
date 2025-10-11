@@ -40,6 +40,7 @@ CREATE TABLE Teachers (
 	last_name VARCHAR(255)
 );
 
+
 CREATE TABLE Assignments (
 	section_id INT,
 	assignment_name VARCHAR(255),
