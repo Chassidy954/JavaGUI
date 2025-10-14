@@ -1,14 +1,14 @@
+//controllers are used for business logic and API endpoints
+
 package com.gradebookProject.gradebookbackend.controllers;
 
 import com.gradebookProject.gradebookbackend.repositories.TeacherRepository;
-import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 import com.gradebookProject.gradebookbackend.entities.Teacher;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
