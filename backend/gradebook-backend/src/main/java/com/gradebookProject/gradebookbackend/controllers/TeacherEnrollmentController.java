@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 
 @RestController
-@RequestMapping("/api/teacher-enrollments")
+@RequestMapping("/api/teacherenrollments")
 public class TeacherEnrollmentController {
 	@Autowired
 	private TeacherEnrollmentRepository teacherEnrollmentRepository;

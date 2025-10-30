@@ -5,7 +5,7 @@ package com.gradebookProject.gradebookbackend.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import com.gradebookProject.gradebookbackend.entities.StudentEnrollment;
 import com.gradebookProject.gradebookbackend.entities.StudentEnrollmentId;
-
+import org.springframework.stereotype.Repository;
 
 public interface StudentEnrollmentRepository extends JpaRepository<StudentEnrollment, StudentEnrollmentId> {
 

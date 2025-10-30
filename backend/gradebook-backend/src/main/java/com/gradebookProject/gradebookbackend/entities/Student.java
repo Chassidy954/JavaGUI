@@ -3,7 +3,7 @@ package com.gradebookProject.gradebookbackend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "Students")
+@Table(name = "students") //works
 public class Student {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

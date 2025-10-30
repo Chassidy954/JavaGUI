@@ -3,17 +3,17 @@ package com.gradebookProject.gradebookbackend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "TeacherEnrollments")
+@Table(name = "teacherenrollments") //works!
 @IdClass(TeacherEnrollmentId.class)
 public class TeacherEnrollment {
 	@Id
 	@ManyToOne
-	@JoinColumn (name = "teacherId")
+	@JoinColumn (name = "teacher_id")
 	private Teacher teacher;
 	
 	@Id
 	@ManyToOne
-	@JoinColumn (name = "sectionId")
+	@JoinColumn (name = "section_id")
 	private Section section;
 
 	public Teacher getTeacher() {

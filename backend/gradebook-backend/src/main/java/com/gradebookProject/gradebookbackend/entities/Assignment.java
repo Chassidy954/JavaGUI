@@ -4,7 +4,7 @@ package com.gradebookProject.gradebookbackend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "Assignments")
+@Table (name = "assignments") //works
 public class Assignment {
 	@EmbeddedId
 	private AssignmentId id;
