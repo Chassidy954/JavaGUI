@@ -11,8 +11,25 @@ public class Assignment {
 	
 	private String assignmentType;
 	
+	private Integer maxScore;
+	
 	public Assignment() {}
-	public Assignment(String assignmentType) { this.assignmentType = assignmentType; }
+	
+	public Assignment(String assignmentType, Integer maxScore) 
+	{ 
+		this.assignmentType = assignmentType; 
+		this.maxScore = maxScore;
+	}
+	
+	public Integer getMaxScore()
+	{
+		return maxScore;
+	}
+	
+	public void setMaxScore(Integer maxScore)
+	{
+		this.maxScore = maxScore;
+	}
 
 	public AssignmentId getId() {
 		return id;
