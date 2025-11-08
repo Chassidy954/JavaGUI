@@ -12,10 +12,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+
 import model.Teacher; 
 import service.AuthService; 
-
-//This file still being worked on..
 
 /**
  * Controller for the Login view (Login.fxml).
@@ -57,8 +56,8 @@ public class LoginController {
             
             System.out.println("Login successful. Teacher details: " + authenticatedTeacher); 
             
-            // Proceed to the next scene
-            loadDashboard(); 
+            //Pass the authenticated teacher model to the transition method
+            loadDashboard(authenticatedTeacher); 
         } else {
             // Authentication Failure
             displayError("Invalid username or password. Please try again.");
@@ -71,7 +70,6 @@ public class LoginController {
     @FXML
     public void handleForgotPassword(ActionEvent event) {
         System.out.println("Forgot Password clicked! Implement navigation to recovery page.");
-        // This is optional and may not be implemented, can be easily removed if we don't need it.
     }
 
     /**
@@ -81,36 +79,38 @@ public class LoginController {
     private void displayError(String message) {
         errorMessageLabel.setText(message);
         errorMessageLabel.setVisible(true);
-        passwordField.clear(); // Clear password field for security
+        passwordField.clear(); 
     }
     
     /**
      * Loads the main application dashboard scene upon successful login.
-     * Note: This is a placeholder and doesn't pass the Teacher model yet.
+     * @param teacher The authenticated Teacher object to pass to the next controller.
      */
-    private void loadDashboard() {
+    //Accept the Teacher object as an argument
+    private void loadDashboard(Teacher teacher) { 
         try {
-            // Just began work on the teacher dashboard for login!! that will be placed here eventually
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml")); 
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Dashboard.fxml")); 
             Parent dashboardRoot = loader.load();
             
-            // Get the current stage from any element (e.g., the username field's scene)
+            // 4. Get the DashboardController instance and set the data
+            DashboardController dashboardController = loader.getController();
+            dashboardController.setTeacherData(teacher);
+            
+            // 5. Get the current stage and switch the scene
             Stage stage = (Stage) usernameField.getScene().getWindow();
             
-            // Create and set the new scene
-            Scene scene = new Scene(dashboardRoot, 800, 600);
+            Scene scene = new Scene(dashboardRoot);
             
-            // Re-apply the application-wide stylesheet to the new scene
+            // 6. Re-apply the application-wide stylesheet to the new scene
             scene.getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());
             
             stage.setScene(scene);
-            stage.setTitle("Gradebook - Teacher Dashboard"); // Update window title
+            stage.setTitle("EduTracker - Teacher Dashboard"); 
             stage.show();
             
         } catch (IOException e) {
             e.printStackTrace();
-            // Fallback error display
-            displayError("Error loading the next screen.");
+            displayError("Critical Error: Could not load the main dashboard screen.");
         }
     }
 }
