@@ -1,9 +1,16 @@
 package com.gradebookProject.gradebookbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 import jakarta.persistence.*;
 
 @Entity
 @Table (name = "sections") //works
+@JsonIdentityInfo( // This is a placeholder to ensure things load. Swap to DTO later.
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "sectionId")
+
 public class Section {
 	@Id
 	@GeneratedValue (strategy = GenerationType.IDENTITY)

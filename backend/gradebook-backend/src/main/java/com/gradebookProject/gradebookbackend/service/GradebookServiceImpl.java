@@ -18,6 +18,9 @@ public class GradebookServiceImpl implements GradebookService {
 	private StudentRepository studentRepository;
 	
 	@Autowired
+	private AttendanceRepository attendanceRepository;
+	
+	@Autowired
 	private AssignmentRepository assignmentRepository;
 	
 	@Autowired
@@ -67,6 +70,11 @@ public class GradebookServiceImpl implements GradebookService {
 		studentRepository.deleteById(id);
 	}
 	
+	// attendance
+	public List<Attendance> findAttendanceByStudentId(Integer studentId)
+	{
+		return attendanceRepository.findByStudentStudentId(studentId);
+	}
 
 	//assignments
 	
