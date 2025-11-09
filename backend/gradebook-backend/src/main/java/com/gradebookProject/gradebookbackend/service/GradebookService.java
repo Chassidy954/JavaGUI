@@ -6,7 +6,6 @@ import java.util.Optional;
 import com.gradebookProject.gradebookbackend.entities.Student;
 import com.gradebookProject.gradebookbackend.entities.Grade;
 import com.gradebookProject.gradebookbackend.entities.Assignment;
-import com.gradebookProject.gradebookbackend.entities.AssignmentId;
 
 public interface GradebookService {
 
@@ -19,19 +18,19 @@ public interface GradebookService {
 	//assignment methods
 	List<Assignment> findAllAssignments();
 	Assignment saveAssignment(Assignment assignment);
-	void deleteAssignment(AssignmentId assignmentId);
-	Optional<Assignment> findAssignmentById(AssignmentId assignmentId);
+	void deleteAssignment(Integer assignmentId);
+	Optional<Assignment> findAssignmentById(Integer assignmentId);
 	
 	//grade methods
-	Grade submitGrade(Integer studentId, AssignmentId assignmentId, Double score);
+	Grade submitGrade(Integer studentId, Integer assignmentId, Double score);
 	List<Grade> findGradesByStudentId(Integer studentId);
-	List<Grade> findGradesByAssignment(AssignmentId assignmentId);
-	Optional<Grade> findGradeByStudentAndAssignment(Integer studentId, AssignmentId assignmentId);
-	Grade updateGrade(Long gradeId, Double score, String comments);
-	void deleteGrade(Long gradeId);
+	List<Grade> findGradesByAssignment(Integer assignmentId);
+	Optional<Grade> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId);
+	Grade updateGrade(Integer gradeId, Double score, String comments);
+	void deleteGrade(Integer gradeId);
 
 	//analytical methods
-	Double calculateAssignmentAverage(AssignmentId assignmentId);
+	Double calculateAssignmentAverage(Integer assignmentId);
 	Double calculateStudentAverage(Integer studentId);
 	
 }

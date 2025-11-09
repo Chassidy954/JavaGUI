@@ -3,12 +3,14 @@ package com.gradebookProject.gradebookbackend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "grades")
+@Table(name = "grades", uniqueConstraints = {
+		@UniqueConstraint(columnNames = {"student_id", "assignment_name"})
+})
 public class Grade {
     
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
     
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
@@ -40,11 +42,11 @@ public class Grade {
     }
     
     // Getters and Setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
     
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
     
@@ -105,7 +107,7 @@ public class Grade {
         return "Grade{" +
                 "id=" + id +
                 ", student=" + (student != null ? student.getFirstName() + " " + student.getLastName() : "null") +
-                ", assignment=" + (assignment != null ? assignment.getId().getAssignmentName() : "null") +
+                ", assignment=" + (assignment != null ? assignment.getAssignmentName() : "null") +
                 ", score=" + score +
                 ", comments='" + comments + '\'' +
                 '}';

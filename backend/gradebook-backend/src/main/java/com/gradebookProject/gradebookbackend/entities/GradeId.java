@@ -1,3 +1,6 @@
+// NOTE: MARKED FOR DELETION
+
+
 package com.gradebookProject.gradebookbackend.entities;
 
 import jakarta.persistence.*;
