@@ -12,29 +12,29 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface GradeRepository extends JpaRepository<Grade, Long> {
+public interface GradeRepository extends JpaRepository<Grade, Integer> {
     
     // Basic find methods
     List<Grade> findByStudent(Student student);
     List<Grade> findByAssignment(Assignment assignment);
     
     // Find by IDs
-    List<Grade> findByStudentId(Integer studentId);
-    List<Grade> findByAssignmentId(AssignmentId assignmentId);
+    List<Grade> findByStudentStudentId(Integer studentId);
+    List<Grade> findByAssignmentId(Integer assignmentId);
     
     // Find specific grade
-    Optional<Grade> findByStudentIdAndAssignmentId(Integer studentId, AssignmentId assignmentId);
+    Optional<Grade> findByStudentStudentIdAndAssignmentId(Integer studentId, Integer assignmentId);
     
     // Find grades for a section
-    List<Grade> findByAssignmentIdSectionId(Integer sectionId);
+    List<Grade> findByAssignmentSectionSectionId(Integer sectionId);
     
     // Analytics queries
     @Query("SELECT AVG(g.score) FROM Grade g WHERE g.assignment.id = :assignmentId")
-    Double findAverageScoreByAssignmentId(@Param("assignmentId") AssignmentId assignmentId);
+    Double findAverageScoreByAssignmentId(@Param("assignmentId") Integer assignmentId);
     
     @Query("SELECT AVG(g.score) FROM Grade g WHERE g.student.id = :studentId")
     Double findAverageScoreByStudentId(@Param("studentId") Integer studentId);
     
     @Query("SELECT COUNT(g) FROM Grade g WHERE g.assignment.id = :assignmentId AND g.score >= :minScore")
-    Long countByAssignmentIdAndMinScore(@Param("assignmentId") AssignmentId assignmentId, @Param("minScore") Double minScore);
+    Integer countByAssignmentIdAndMinScore(@Param("assignmentId") Integer assignmentId, @Param("minScore") Double minScore);
 }

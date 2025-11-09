@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="backend/gradebook-backend/src/main/java"/>
+	<classpathentry kind="src" path="backend/gradebook-backend/src/test/java"/>
+	<classpathentry kind="src" path="frontend/GradebookApp/src"/>
+	<classpathentry kind="lib" path="backend/gradebook-backend/gradle/wrapper/gradle-wrapper.jar"/>
+	<classpathentry kind="output" path="backend/gradebook-backend/bin/main"/>
+</classpath>

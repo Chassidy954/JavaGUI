@@ -1,3 +1,5 @@
+// NOTE: MARKED FOR DELETION
+
 package com.gradebookProject.gradebookbackend.entities;
 
 import java.io.Serializable;

@@ -62,7 +62,7 @@ public class GradebookServiceImpl implements GradebookService {
 		}
 		
 		//delete grades first then student
-		List<Grade> studentGrades = gradeRepository.findByStudentId(id); //findbystudentid is undefined
+		List<Grade> studentGrades = gradeRepository.findByStudentStudentId(id); 
 		gradeRepository.deleteAll(studentGrades);
 		studentRepository.deleteById(id);
 	}
@@ -84,7 +84,7 @@ public class GradebookServiceImpl implements GradebookService {
 
             throw new IllegalArgumentException("Assignment ID (sectionId and assignmentName is required!");
         }
-		if(assignment.getId().getAssignmentName() == null || assignment.getId().getAssignmentName().trim().isEmpty()) {
+		if(assignment.getAssignmentName() == null || assignment.getAssignmentName().trim().isEmpty()) {
             throw new IllegalArgumentException("Assignment name is required!");
         }
         if(assignment.getMaxScore() == null || assignment.getMaxScore() <= 0) {
@@ -95,7 +95,7 @@ public class GradebookServiceImpl implements GradebookService {
 	}
 	
 	@Override
-    public void deleteAssignment(AssignmentId assignmentId) 
+    public void deleteAssignment(Integer assignmentId) 
 	{
         //check if assignment exists first
         if (!assignmentRepository.existsById(assignmentId)) 
@@ -111,21 +111,21 @@ public class GradebookServiceImpl implements GradebookService {
     }
 	
 	@Override
-    public Optional<Assignment> findAssignmentById(AssignmentId assignmentId) {
+    public Optional<Assignment> findAssignmentById(Integer assignmentId) {
         return assignmentRepository.findById(assignmentId);
 	}
 	
 	//grades
 
 	@Override
-	public Optional<Grade> findGradeByStudentAndAssignment(Integer studentId, AssignmentId assignmentId) {
+	public Optional<Grade> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId) {
 		// TODO Auto-generated method stub
-		return gradeRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
+		return gradeRepository.findByStudentStudentIdAndAssignmentId(studentId, assignmentId);
 
 	}
 
 	@Override
-	public Grade updateGrade(Long gradeId, Double score, String comments) {
+	public Grade updateGrade(Integer gradeId, Double score, String comments) {
 		// TODO Auto-generated method stub
 		Grade grade = gradeRepository.findById(gradeId)
 		        .orElseThrow(() -> new RuntimeException("Grade not found with id: " + gradeId));
@@ -151,7 +151,7 @@ public class GradebookServiceImpl implements GradebookService {
 		}
 
 	@Override
-	public void deleteGrade(Long gradeId) {
+	public void deleteGrade(Integer gradeId) {
 		// TODO Auto-generated method stub
 		if (!gradeRepository.existsById(gradeId)) {
 	        throw new RuntimeException("Grade not found with id: " + gradeId);
@@ -160,13 +160,13 @@ public class GradebookServiceImpl implements GradebookService {
 	}
 
 	@Override
-	public List<Grade> findGradesByAssignment(AssignmentId assignmentId) {
+	public List<Grade> findGradesByAssignment(Integer assignmentId) {
 		// TODO Auto-generated method stub
 		return gradeRepository.findByAssignmentId(assignmentId);
 	}
 	
 	@Override
-	public Grade submitGrade(Integer studentId, AssignmentId assignmentId, Double score) {
+	public Grade submitGrade(Integer studentId, Integer assignmentId, Double score) {
 		// TODO Auto-generated method stub
 		Student student = studentRepository.findById(studentId) //Type mismatch: cannot convert from Optional<Student> to Student
 			.orElseThrow(() -> new RuntimeException("Student not found with id: " + studentId));
@@ -187,7 +187,7 @@ public class GradebookServiceImpl implements GradebookService {
 		
 		//check if grade exists
 		
-		Optional<Grade> existingGrade = gradeRepository.findByStudentIdAndAssignmentId(studentId, assignmentId);
+		Optional<Grade> existingGrade = gradeRepository.findByStudentStudentIdAndAssignmentId(studentId, assignmentId);
 			
 		Grade grade;
 		if(existingGrade.isPresent())
@@ -209,14 +209,14 @@ public class GradebookServiceImpl implements GradebookService {
 	@Override
 	public List<Grade> findGradesByStudentId(Integer studentId) {
 		// TODO Auto-generated method stub
-		return gradeRepository.findByStudentId(studentId); //The method findByStudentId(Integer) is undefined for the type GradeRepository
+		return gradeRepository.findByStudentStudentId(studentId); 
 	}
 
 	
 	//analytical methods
 	@Override
 	public Double calculateStudentAverage(Integer studentId) {
-		List<Grade> grades = gradeRepository.findByStudentId(studentId);
+		List<Grade> grades = gradeRepository.findByStudentStudentId(studentId);
         
         if (grades.isEmpty()) {
             return 0.0;
@@ -231,7 +231,7 @@ public class GradebookServiceImpl implements GradebookService {
 	}
 
 	@Override
-	public Double calculateAssignmentAverage(AssignmentId assignmentId) {
+	public Double calculateAssignmentAverage(Integer assignmentId) {
 		// TODO Auto-generated method stub
 		Double average = gradeRepository.findAverageScoreByAssignmentId(assignmentId);
 	    return average != null ? average : 0.0;
