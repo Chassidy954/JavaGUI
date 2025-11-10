@@ -16,8 +16,11 @@ public class Grade {
     @JoinColumn(name = "student_id", nullable = false)
     private Student student;
     
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "assignment_id", nullable = false)
+    @ManyToOne
+    @JoinColumns({
+        @JoinColumn(name = "section_id", referencedColumnName = "sectionId"),
+        @JoinColumn(name = "assignment_name", referencedColumnName = "assignmentName")
+    })
     private Assignment assignment;
     
     @Column(nullable = false)
