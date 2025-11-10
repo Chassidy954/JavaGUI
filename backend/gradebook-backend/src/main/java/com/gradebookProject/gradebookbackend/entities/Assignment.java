@@ -1,12 +1,19 @@
 package com.gradebookProject.gradebookbackend.entities;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import jakarta.persistence.*;
 
 @Entity
 @Table (name = "assignments", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"section_id", "assignment_name"})
-}) //works
+})
+
+@JsonIdentityInfo( // This is a placeholder to ensure things load. Swap to DTO later
+		generator = ObjectIdGenerators.PropertyGenerator.class,
+		property = "id")
+//works
 public class Assignment {
 	
 	@Id
