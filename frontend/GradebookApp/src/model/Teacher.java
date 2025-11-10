@@ -1,43 +1,27 @@
 package model;
 
 public class Teacher {
-private String teacherId;
-private String firstName; 
-private String lastName;
-private String email;
+    private final String teacherId;
+    private final String firstName;
+    private final String lastName;
 
-public Teacher(String teacherId, String firstName, String lastName, String email) {
-	this.teacherId = teacherId;
-	this.firstName = firstName;
-	this.lastName = lastName;
-	this.email = email;
-}
+    public Teacher(String teacherId, String firstName, String lastName, String email) {
+        this.teacherId = teacherId;
+        this.firstName = firstName;
+        this.lastName = lastName;
+    }
 
-//getters 
-
-public String getTeacherId() {
-	return teacherId;
-}
-
-public String getFirstName() {
-	return firstName;
-}
-
-public String getLastName() {
-	return lastName;
-}
-
-public String getEmail() {
-	return email;
-}
-
-// Simple toString for easy logging and debugging
-@Override
-public String toString() {
-    return "Teacher{" +
-           "id='" + teacherId + '\'' +
-           ", name='" + firstName + " " + lastName + '\'' +
-           ", email='" + email + '\'' +
-           '}';
-}
+    // Getters for display
+    public String getTeacherId() { return teacherId; }
+    public String getFirstName() { return firstName; }
+    public String getLastName() { return lastName; }
+  
+   
+    @Override
+    public String toString() {
+        return "Teacher{" +
+               "id='" + teacherId + '\'' +
+               ", name='" + firstName + " " + lastName + 
+               '}';
+    }
 }
