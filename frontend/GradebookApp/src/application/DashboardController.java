@@ -18,19 +18,21 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors; 
 
-// Corrected Imports
 import model.Section; 
 import model.Student; 
 import model.Teacher; 
+import model.Grade; 
 import service.ClassService; 
+
 
 public class DashboardController {
 
-    // --- FXML Elements ---
+    // FXML Elements
     @FXML private BorderPane rootPane; 
     @FXML private Label teacherNameLabel; 
-    @FXML private ListView<Section> classListView; 
+    @FXML private ListView<Section> classListView;
     @FXML private Label contentHeaderLabel; 
     @FXML private VBox contentArea; 
     @FXML private HBox headerBar; 
@@ -82,7 +84,6 @@ public class DashboardController {
         }
     }
     
-    @SuppressWarnings("unchecked") 
     private void setupRosterTable() {
         // Clear default content and add the TableView
         contentArea.getChildren().clear();
@@ -103,17 +104,43 @@ public class DashboardController {
         lastNameCol.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         lastNameCol.setPrefWidth(150);
         
-        rosterTable.getColumns().setAll(idCol, firstNameCol, lastNameCol);
+        // Average Grade Column
+        TableColumn<Student, String> avgGradeCol = new TableColumn<>("Avg Grade");
+        // Binds to the new display getter that performs rounding
+        avgGradeCol.setCellValueFactory(new PropertyValueFactory<>("displayAverage"));
+        avgGradeCol.setPrefWidth(100);
+        avgGradeCol.setStyle("-fx-alignment: CENTER-RIGHT;"); 
+        
+        // Add columns to the table
+        rosterTable.getColumns().setAll(idCol, firstNameCol, lastNameCol, avgGradeCol); 
         rosterTable.setItems(studentData);
     }
 
     private void loadClassDetails(Section section) {
         contentHeaderLabel.setText(section.getSectionName() + " Roster & Grades");
         
-        String sectionIdString = section.getSectionId() + "";
+        // Correct conversion of int ID to String for service call
+        String sectionIdString = String.valueOf(section.getSectionId());
         
+        // 1. Fetch Roster and All Grades for the Section
         List<Student> students = classService.getRosterForClass(sectionIdString);
+        List<Grade> allGrades = classService.getGradesForSection(section.getSectionId()); // Assumes method takes int
+        
+        // 2. PROCESSING AND CALCULATION LOGIC
+        for (Student student : students) {
+            // Filter the full list of grades to get only the current student's grades
+            List<Grade> studentGrades = allGrades.stream()
+                .filter(grade -> grade.getStudentId() == student.getStudentId())
+                .collect(Collectors.toList());
 
+            // Calculate average using the service layer method
+            double average = classService.calculateUnweightedAverage(studentGrades);
+            
+            // Set the calculated average on the Student model (mutator method)
+            student.setCalculatedAverage(average); 
+        }
+        
+        // 3. Update Table View with processed students
         studentData.clear();
         studentData.addAll(students);
         
@@ -121,22 +148,20 @@ public class DashboardController {
             contentArea.getChildren().add(0, contentHeaderLabel);
         }
         
-        System.out.println("Roster for " + section.getSectionName() + " loaded successfully.");
+        System.out.println("Roster for " + section.getSectionName() + " loaded successfully with calculated averages.");
     }
 
-    // --- ACTION HANDLER FOR LOGOUT ---
+    // Action handler for login
     @FXML
     private void handleLogout(ActionEvent event) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Login.fxml")); 
             Parent loginRoot = loader.load();
             
-            // Get the current stage and switch the scene
             Stage stage = (Stage) rootPane.getScene().getWindow();
             
             Scene loginScene = new Scene(loginRoot);
             
-            // Re-apply the application-wide stylesheet
             loginScene.getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());
             
             stage.setScene(loginScene);

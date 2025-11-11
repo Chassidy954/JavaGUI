@@ -16,17 +16,15 @@ public class Grade {
     
     // Score Data Fields (From Grades entity)
     private final double score;       
-    private final double maxScore;
-    private final String comments;    
+    private final double maxScore;    
 
     // Constructor requires all fields necessary for display and calculation
-    public Grade(int id, int studentId, String assignmentName, double score, double maxScore, String comments) {
+    public Grade(int id, int studentId, String assignmentName, double score, double maxScore) {
         this.id = id; 
         this.studentId = studentId;
         this.assignmentName = assignmentName;
         this.score = score;
         this.maxScore = maxScore;
-        this.comments = comments;
     }
 
     // Getters for Data Binding (Required for TableView)
@@ -35,7 +33,6 @@ public class Grade {
     public String getAssignmentName() { return assignmentName; }
     public double getScore() { return score; }
     public double getMaxScore() { return maxScore; }
-    public String getComments() { return comments; }
 
     /**
      * Calculates the percentage score.
