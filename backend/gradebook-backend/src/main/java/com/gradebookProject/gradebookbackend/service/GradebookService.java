@@ -3,35 +3,67 @@ package com.gradebookProject.gradebookbackend.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.gradebookProject.gradebookbackend.entities.Student;
-import com.gradebookProject.gradebookbackend.entities.Attendance;
-import com.gradebookProject.gradebookbackend.entities.Grade;
-import com.gradebookProject.gradebookbackend.entities.Assignment;
+import com.gradebookProject.gradebookbackend.dto.*;
 
 public interface GradebookService {
 
 	// student methods
-	List<Student> findAllStudents();
-	Optional<Student> findStudentById(Integer id);
-	Student saveStudent(Student student);
+	List<StudentDTO> findAllStudents();
+	Optional<StudentDTO> findStudentById(Integer id);
+	StudentDTO saveStudent(StudentDTO student);
 	void deleteStudent(Integer id);
 	
+	// student enrollment methods
+	StudentEnrollmentDTO saveStudentEnrollment(StudentEnrollmentDTO dto);
+	void deleteStudentEnrollment(Integer id);
+	List<StudentEnrollmentDTO> findAllStudentEnrollments();
+	Optional<StudentEnrollmentDTO> findStudentEnrollmentById(Integer studentId);
+	StudentDTO updateStudent(Integer studentId, StudentDTO dto);
+	
 	// attendance methods
-	List<Attendance> findAttendanceByStudentId(Integer studentId);
+	List<AttendanceDTO> findAllAttendance();
+	List<AttendanceDTO> findAttendanceByStudentId(Integer studentId);
+	AttendanceDTO saveAttendance(AttendanceDTO attendance);
+	void deleteAttendance(Integer attendanceId);
 	
 	// assignment methods
-	List<Assignment> findAllAssignments();
-	Assignment saveAssignment(Assignment assignment);
+	List<AssignmentDTO> findAllAssignments();
+	AssignmentDTO saveAssignment(AssignmentDTO assignment);
 	void deleteAssignment(Integer assignmentId);
-	Optional<Assignment> findAssignmentById(Integer assignmentId);
+	Optional<AssignmentDTO> findAssignmentById(Integer assignmentId);
 	
 	// grade methods
-	Grade submitGrade(Integer studentId, Integer assignmentId, Double score);
-	List<Grade> findGradesByStudentId(Integer studentId);
-	List<Grade> findGradesByAssignment(Integer assignmentId);
-	Optional<Grade> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId);
-	Grade updateGrade(Integer gradeId, Double score, String comments);
+	GradeDTO submitGrade(Integer studentId, Integer assignmentId, Double score);
+	List<GradeDTO> findGradesByStudentId(Integer studentId);
+	List<GradeDTO> findGradesByAssignment(Integer assignmentId);
+	List<GradeDTO> findGradesBySection(Integer sectionId);
+	Optional<GradeDTO> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId);
+	GradeDTO updateGrade(Integer gradeId, Double score, String comments);
 	void deleteGrade(Integer gradeId);
+	
+	// course methods
+	CourseDTO saveCourse(CourseDTO course);
+	void deleteCourse(Integer courseId);
+	List<CourseDTO> findAllCourses();
+	Optional<CourseDTO> findCourseById(Integer courseId);
+	
+	// section methods
+	SectionDTO saveSection(SectionDTO section);
+	void deleteSection(Integer sectionId);
+	List<SectionDTO> findAllSections();
+	Optional<SectionDTO> findSectionById(Integer sectionId);
+	
+	// teacher methods
+	TeacherDTO saveTeacher(TeacherDTO teacher);
+	void deleteTeacher(Integer teacherId);
+	List<TeacherDTO> findAllTeachers();
+	Optional<TeacherDTO> findTeacherById(Integer teacherId);
+	
+	// teacher enrollment methods
+	TeacherEnrollmentDTO saveTeacherEnrollment(TeacherEnrollmentDTO dto);
+	void deleteTeacherEnrollment(Integer teacherId);
+	List<TeacherEnrollmentDTO> findAllTeacherEnrollments();
+	Optional<TeacherEnrollmentDTO> findTeacherEnrollmentById(Integer teacherId);
 
 	// analytical methods
 	Double calculateAssignmentAverage(Integer assignmentId);

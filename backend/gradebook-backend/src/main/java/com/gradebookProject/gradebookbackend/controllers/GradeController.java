@@ -2,8 +2,8 @@
 
 package com.gradebookProject.gradebookbackend.controllers;
 
-import com.gradebookProject.gradebookbackend.repositories.GradeRepository;
-import com.gradebookProject.gradebookbackend.entities.Grade;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
+import com.gradebookProject.gradebookbackend.dto.GradeDTO;
 
 import java.util.List;
 
@@ -14,18 +14,34 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/grades")
 public class GradeController {
+
 	@Autowired
-	private GradeRepository gradeRepository;
+	private GradebookService gradeBookService;
 	
-	@GetMapping //returns all grades
-	public List<Grade> getAllGrades()
+	@GetMapping("/student/{studentId}") // returns all grades for a student
+	public List<GradeDTO> findGradesByStudent(@PathVariable Integer studentId)
 	{
-		return gradeRepository.findAll();
+		return gradeBookService.findGradesByStudentId(studentId);
 	}
 	
-	@PostMapping //creates a new grade
-	public Grade createGrade(@RequestBody Grade grade)
+	@GetMapping("/assignment/{assignmentId}") // returns all grades for an assignment
+	public List<GradeDTO> findGradesByAssignment(@PathVariable Integer assignmentId)
 	{
-		return gradeRepository.save(grade);
+		return gradeBookService.findGradesByAssignment(assignmentId);
+	}
+	
+	@GetMapping("/section/{sectionId}") // returns all grades for a section
+	public List<GradeDTO> findGradesBySection(@PathVariable Integer sectionId)
+	{
+		return gradeBookService.findGradesBySection(sectionId);
+	}
+	@PostMapping //creates a new grade
+	public GradeDTO createGrade(@RequestBody GradeDTO grade)
+	{
+		return gradeBookService.submitGrade(
+				grade.getStudentId(),
+				grade.getAssignmentId(),
+				grade.getScore()
+		);
 	}
 }

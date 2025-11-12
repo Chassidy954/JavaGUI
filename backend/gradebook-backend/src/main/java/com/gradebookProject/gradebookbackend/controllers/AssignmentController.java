@@ -2,8 +2,8 @@
 
 package com.gradebookProject.gradebookbackend.controllers;
 
-import com.gradebookProject.gradebookbackend.entities.Assignment;
-import com.gradebookProject.gradebookbackend.repositories.AssignmentRepository;
+import com.gradebookProject.gradebookbackend.dto.AssignmentDTO;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
 
 import java.util.List;
 
@@ -15,18 +15,18 @@ import org.springframework.web.bind.annotation.*;
 public class AssignmentController {
 
 	@Autowired
-	private AssignmentRepository assignmentRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping //get all assignments
-	public List<Assignment> getAllAssignments()
+	public List<AssignmentDTO> getAllAssignments()
 	{
-		return assignmentRepository.findAll();
+		return gradeBookService.findAllAssignments();
 	}
 	
 	@PostMapping //create new assignment
-	public Assignment createAssignment(@RequestBody Assignment assignment)
+	public AssignmentDTO createAssignment(@RequestBody AssignmentDTO dto)
 	{
-		return assignmentRepository.save(assignment);
+		return gradeBookService.saveAssignment(dto);
 	}
 	
 }

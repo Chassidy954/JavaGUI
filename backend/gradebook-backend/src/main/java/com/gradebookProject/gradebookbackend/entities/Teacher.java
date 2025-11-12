@@ -3,7 +3,7 @@ package com.gradebookProject.gradebookbackend.entities;
 import jakarta.persistence.*;
 
 @Entity
-@Table (name = "teachers") //works
+@Table (name = "teachers") 
 public class Teacher {
 	
 	@Id

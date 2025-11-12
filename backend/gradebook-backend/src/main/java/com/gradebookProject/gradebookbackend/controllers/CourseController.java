@@ -2,8 +2,10 @@
 
 package com.gradebookProject.gradebookbackend.controllers;
 
+import com.gradebookProject.gradebookbackend.dto.CourseDTO;
 import com.gradebookProject.gradebookbackend.entities.Course;
 import com.gradebookProject.gradebookbackend.repositories.CourseRepository;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
 
 import java.util.List;
 
@@ -16,18 +18,18 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
 
 	@Autowired
-	private CourseRepository courseRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping //get all courses
-	public List<Course> getAllCourses()
+	public List<CourseDTO> getAllCourses()
 	{
-		return courseRepository.findAll();
+		return gradeBookService.findAllCourses();
 	}
 	
 	@PostMapping //create new course
-	public Course createCourse(@RequestBody Course course)
+	public CourseDTO createCourse(@RequestBody CourseDTO dto)
 	{
-		return courseRepository.save(course);
+		return gradeBookService.saveCourse(dto);
 	}
 	
 }

@@ -83,10 +83,10 @@ public class DataSeeder implements CommandLineRunner {
             sectionRepository.save(hospitality);
 
             // Create Assignments
-            Assignment hw1 = new Assignment("Homework 1", algebra, 100);
-            Assignment test1 = new Assignment("Test 1", algebra, 100);
-            Assignment hw1_csci = new Assignment("Homework 1", csci101, 100);
-            Assignment cla1 = new Assignment("Forgetting HR", hospitality, 100);
+            Assignment hw1 = new Assignment("Homework 1", "HOMEWORK", algebra, 100);
+            Assignment test1 = new Assignment("Test 1", "TEST", algebra, 100);
+            Assignment hw1_csci = new Assignment("Homework 1", "HOMEWORK", csci101, 100);
+            Assignment cla1 = new Assignment("Forgetting HR", "CLA", hospitality, 100);
             assignmentRepository.saveAll(List.of(hw1, test1, hw1_csci, cla1));
 
             // Create Enrollments (the junction)
