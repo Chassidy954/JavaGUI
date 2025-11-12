@@ -1,15 +1,10 @@
 package com.gradebookProject.gradebookbackend.entities;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
-@Table (name = "sections") //works
-@JsonIdentityInfo( // This is a placeholder to ensure things load. Swap to DTO later.
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "sectionId")
+@Table (name = "sections")
 
 public class Section {
 	@Id
@@ -18,6 +13,7 @@ public class Section {
 	
 	@ManyToOne
 	@JoinColumn (name="courseId")
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Course course;
 	
 	private String sectionName;

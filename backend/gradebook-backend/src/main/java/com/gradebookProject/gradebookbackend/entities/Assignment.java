@@ -1,19 +1,12 @@
 package com.gradebookProject.gradebookbackend.entities;
-
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table (name = "assignments", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"section_id", "assignment_name"})
 })
-
-@JsonIdentityInfo( // This is a placeholder to ensure things load. Swap to DTO later
-		generator = ObjectIdGenerators.PropertyGenerator.class,
-		property = "id")
-//works
 public class Assignment {
 	
 	@Id
@@ -22,6 +15,7 @@ public class Assignment {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "section_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Section section;
 	
 	@Column(name = "assignment_name")
@@ -33,8 +27,9 @@ public class Assignment {
 	
 	public Assignment() {}
 	
-	public Assignment(String assignmentType, Section section, Integer maxScore) 
+	public Assignment(String assignmentName, String assignmentType, Section section, Integer maxScore) 
 	{ 
+		this.assignmentName = assignmentName;
 		this.assignmentType = assignmentType; 
 		this.section = section;
 		this.maxScore = maxScore;
