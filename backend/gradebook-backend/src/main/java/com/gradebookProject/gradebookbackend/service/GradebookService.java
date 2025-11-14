@@ -11,6 +11,7 @@ public interface GradebookService {
 	List<StudentDTO> findAllStudents();
 	Optional<StudentDTO> findStudentById(Integer id);
 	StudentDTO saveStudent(StudentDTO student);
+	StudentDTO updateStudent(Integer studentId, StudentDTO dto);
 	void deleteStudent(Integer id);
 	
 	// student enrollment methods
@@ -18,7 +19,7 @@ public interface GradebookService {
 	void deleteStudentEnrollment(Integer id);
 	List<StudentEnrollmentDTO> findAllStudentEnrollments();
 	Optional<StudentEnrollmentDTO> findStudentEnrollmentById(Integer studentId);
-	StudentDTO updateStudent(Integer studentId, StudentDTO dto);
+	List<StudentEnrollmentDTO> findStudentEnrollmentsBySectionId(Integer sectionId);
 	
 	// attendance methods
 	List<AttendanceDTO> findAllAttendance();
@@ -64,6 +65,7 @@ public interface GradebookService {
 	void deleteTeacherEnrollment(Integer teacherId);
 	List<TeacherEnrollmentDTO> findAllTeacherEnrollments();
 	Optional<TeacherEnrollmentDTO> findTeacherEnrollmentById(Integer teacherId);
+	List<TeacherEnrollmentDTO> findEnrollmentsByTeacherId(Integer teacherId);
 
 	// analytical methods
 	Double calculateAssignmentAverage(Integer assignmentId);

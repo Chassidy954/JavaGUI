@@ -150,6 +150,14 @@ public class GradebookServiceImpl implements GradebookService {
 				.map(studentEnrollmentMapper::convertToDTO);
 	}
 	
+	@Override
+	public List<StudentEnrollmentDTO> findStudentEnrollmentsBySectionId(Integer sectionId)
+	{
+		return studentEnrollmentRepository.findBySectionSectionId(sectionId).stream()
+			.map(studentEnrollmentMapper::convertToDTO)
+			.collect(Collectors.toList());
+	}
+	
 	// attendance
 	@Override
 	public List<AttendanceDTO> findAllAttendance()
@@ -454,6 +462,15 @@ public class GradebookServiceImpl implements GradebookService {
 	{
 		return teacherEnrollmentRepository.findById(enrollmentId)
 				.map(teacherEnrollmentMapper::convertToDTO);
+	}
+	
+	@Override
+	public List<TeacherEnrollmentDTO> findEnrollmentsByTeacherId(Integer enrollmentId)
+	{
+		List<TeacherEnrollment> enrollments = teacherEnrollmentRepository.findByTeacherTeacherId(enrollmentId);
+		return enrollments.stream()
+				.map(teacherEnrollmentMapper::convertToDTO)
+				.collect(Collectors.toList());
 	}
 	
 	//analytical methods

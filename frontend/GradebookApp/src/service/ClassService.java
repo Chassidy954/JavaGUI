@@ -1,36 +1,101 @@
 package service;
 
+import model.TeacherEnrollment;
+import model.Section;
 import model.Student;
-import model.Subject;
-import java.util.ArrayList;
-import java.util.Arrays;
+import model.StudentEnrollment;
+
 import java.util.List;
+import java.util.stream.Collectors;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * Service to handle business logic related to classes, students, and subjects.
  * Currently returns simulated data.
  */
 public class ClassService {
-
-    // Simulates fetching all classes taught by a teacher
-    public List<Subject> getClassesForTeacher(String teacherId) {
-        // Hard-coded list of classes for demonstration
-        return Arrays.asList(
-            new Subject("1101", "Algebra I"),
-            new Subject("1102", "CSCI 1102"),
-            new Subject("1103", "Hospitality and Hospitals")
-        );
+	
+	private final HttpClient client = HttpClient.newHttpClient();
+	private final ObjectMapper mapper = new ObjectMapper();
+	
+    // Fetch all classes taught by a teacher
+    public List<Section> getClassesForTeacher(Integer teacherId)
+    {
+    	HttpRequest request = HttpRequest.newBuilder()
+    			.uri(URI.create("http://localhost:8080/api/teacherenrollments/teacher/" + teacherId))
+    			.GET()
+    			.build();
+    	
+    	try {
+    		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    		if (response.statusCode() == 200)
+    		{
+    			// Parse the JSON string into a list of enrollment objects
+    			List<TeacherEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<TeacherEnrollment>>() {});
+    			return enrollments.stream()
+    					.map(enrollment -> {
+    						Section section = new Section();
+    						section.setId(enrollment.getId());
+    						section.setCourseId(1);
+    						section.setCourseName("PLACEHOLDER");
+    						section.setSectionName(enrollment.getSectionName());
+    						
+    						return section;
+    					})
+    					.collect(Collectors.toList());
+    		}
+    		else 
+    		{
+    			System.out.println("Error: Status code " + response.statusCode());
+    			return List.of();
+    		}
+    		
+    	} catch (Exception e)
+    	{
+    		e.printStackTrace();
+    		return List.of();
+    	}
     }
     
-    // Simulates fetching the roster for a selected class
-    public List<Student> getRosterForClass(String classId) {
-        // Hard-coded list of students for demonstration
-        return Arrays.asList(
-            new Student(2001, "Alice", "Smith"),
-            new Student(2002, "Bob", "Johnson"),
-            new Student(2003, "Charlie", "Brown"),
-            new Student(2004, "Dana", "White")
-        );
+    // Fetch the roster data for a given class
+    public List<Student> getRosterForClass(Integer classId)
+    {
+    	HttpRequest request = HttpRequest.newBuilder()
+    			.uri(URI.create("http://localhost:8080/api/studentenrollments/sections/" + classId))
+    			.GET()
+    			.build();
+    	try {
+    		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+    		if (response.statusCode() == 200)
+    		{
+    			List<StudentEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<StudentEnrollment>>() {});
+    			return enrollments.stream()
+    					.map(enrollment -> {
+    						Student student = new Student();
+    						student.setId(enrollment.getStudentId());
+    						String[] nameData = enrollment.getStudentName().split(" ");
+    						student.setFirstName(nameData[0]);
+    						student.setLastName(nameData[1]);
+    						return student;
+    					})
+    					.collect(Collectors.toList());
+    		}
+    		else
+    		{
+    			System.out.println("Error: Status code " + response.statusCode());
+    			return List.of();
+    		}
+    		
+    	} catch (Exception e)
+    	{
+    		e.printStackTrace();
+    		return List.of();
+    	}
     }
     
     // Simulates fetching the current subject name

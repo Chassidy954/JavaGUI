@@ -18,9 +18,12 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import java.io.IOException;
 
-import model.Subject;
-import model.Student; 
-import model.Teacher; 
+import model.BAKSubject;
+import model.BAKStudent; 
+import model.BAKTeacher;
+import model.Section;
+import model.Student;
+import model.Teacher;
 import service.ClassService; 
 import java.util.List;
 
@@ -29,7 +32,7 @@ public class DashboardController {
     // --- FXML Elements ---
     @FXML private BorderPane rootPane; 
     @FXML private Label teacherNameLabel; 
-    @FXML private ListView<Subject> classListView;
+    @FXML private ListView<Section> classListView;
     @FXML private Label contentHeaderLabel; 
     @FXML private VBox contentArea; 
     @FXML private HBox headerBar; 
@@ -62,20 +65,20 @@ public class DashboardController {
         if (teacher != null) {
             String fullName = teacher.getFirstName() + " " + teacher.getLastName();
             teacherNameLabel.setText("Welcome, " + fullName);
-            loadClassList(teacher.getTeacherId());
+            loadClassList(teacher.getId());
         }
     }
 
-    private void loadClassList(String teacherId) {
-        List<Subject> classes = classService.getClassesForTeacher(teacherId);
+    private void loadClassList(Integer teacherId) {
+        List<Section> classes = classService.getClassesForTeacher(teacherId);
         classListView.getItems().addAll(classes);
         
         // Set the display format for the Subject model (shows SubjectName in the list)
-        classListView.setCellFactory(lv -> new javafx.scene.control.ListCell<Subject>() {
+        classListView.setCellFactory(lv -> new javafx.scene.control.ListCell<Section>() {
             @Override
-            protected void updateItem(Subject subject, boolean empty) {
+            protected void updateItem(Section subject, boolean empty) {
                 super.updateItem(subject, empty);
-                setText(empty ? null : subject.getSubjectName());
+                setText(empty ? null : subject.getSectionName());
             }
         });
         
@@ -97,7 +100,7 @@ public class DashboardController {
 
         // 1. Student ID Column
         TableColumn<Student, Integer> idCol = new TableColumn<>("ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         idCol.setPrefWidth(50);
         
         // 2. First Name Column
@@ -117,12 +120,12 @@ public class DashboardController {
         rosterTable.setItems(studentData);
     }
 
-    private void loadClassDetails(Subject subject) {
+    private void loadClassDetails(Section subject) {
         // 1. Update the header
-        contentHeaderLabel.setText(subject.getSubjectName() + " Roster & Grades");
+        contentHeaderLabel.setText(subject.getSectionName() + " Roster & Grades");
         
         // 2. Fetch the student roster from the service
-        List<Student> students = classService.getRosterForClass(subject.getSubjectId());
+        List<Student> students = classService.getRosterForClass(subject.getId());
 
         // 3. Clear the observable list and add the new data
         studentData.clear();

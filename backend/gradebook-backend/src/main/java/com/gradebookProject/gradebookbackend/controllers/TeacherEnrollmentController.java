@@ -26,6 +26,13 @@ public class TeacherEnrollmentController {
 		return gradeBookService.findAllTeacherEnrollments();
 	}
 	
+	// Find all the enrollments for a given teacher
+	@GetMapping("/teacher/{teacherId}")
+	public List<TeacherEnrollmentDTO> getTeacherEnrollmentsById(@PathVariable Integer teacherId)
+	{
+		return gradeBookService.findEnrollmentsByTeacherId(teacherId);
+	}
+	
 	@PostMapping //creates a new teacher enrollment
 	public TeacherEnrollmentDTO createTeacherEnrollment(@RequestBody TeacherEnrollmentDTO teacherEnrollment)
 	{

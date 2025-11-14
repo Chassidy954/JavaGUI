@@ -26,10 +26,9 @@ public class AuthService {
         if (VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password)) {
             // Success: Return a fully constructed Teacher model object
             Teacher authenticatedTeacher = new Teacher(
-                "T001", 
+                1, 
                 "Jane", 
-                "Doe", 
-                "jane.doe@school.edu"
+                "Doe"
             );
             return Optional.of(authenticatedTeacher);
         } else {
