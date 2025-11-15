@@ -2,8 +2,8 @@
 
 package com.gradebookProject.gradebookbackend.controllers;
 
-import com.gradebookProject.gradebookbackend.entities.Student;
-import com.gradebookProject.gradebookbackend.repositories.StudentRepository;
+import com.gradebookProject.gradebookbackend.dto.StudentDTO;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
 
 import java.util.List;
 
@@ -16,18 +16,37 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
 	@Autowired
-	private StudentRepository studentRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping //get all students
-	public List<Student> getAllStudents()
+	public List<StudentDTO> getAllStudents()
 	{
-		return studentRepository.findAll();
+		return gradeBookService.findAllStudents();
+	}
+	
+	@GetMapping("/{id}")
+	public StudentDTO getStudentById(@PathVariable Integer id)
+	{
+		return gradeBookService.findStudentById(id)
+				.orElseThrow(() -> new RuntimeException("Could not find student with id: " + id));
+	}
+	
+	@PutMapping("/{id}")
+	public StudentDTO updateStudent(@PathVariable Integer id, @RequestBody StudentDTO dto)
+	{
+		return gradeBookService.updateStudent(id, dto);
 	}
 	
 	@PostMapping //create new student
-	public Student createStudent(@RequestBody Student student)
+	public StudentDTO createStudent(@RequestBody StudentDTO dto)
 	{
-		return studentRepository.save(student);
+		return gradeBookService.saveStudent(dto);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteStudent(@PathVariable Integer id)
+	{
+		gradeBookService.deleteStudent(id);
 	}
 	
 }

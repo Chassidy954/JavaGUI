@@ -3,6 +3,8 @@
 package com.gradebookProject.gradebookbackend.controllers;
 
 import com.gradebookProject.gradebookbackend.repositories.SectionRepository;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
+import com.gradebookProject.gradebookbackend.dto.SectionDTO;
 import com.gradebookProject.gradebookbackend.entities.Section;
 
 import java.util.List;
@@ -14,18 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/sections")
 public class SectionController {
+	
 	@Autowired
-	private SectionRepository sectionRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping //return all sections
-	public List<Section> getAllSections()
+	public List<SectionDTO> getAllSections()
 	{
-		return sectionRepository.findAll();
+		return gradeBookService.findAllSections();
 	}
 	
 	@PostMapping //create a new section
-	public Section createSection(@RequestBody Section section)
+	public SectionDTO createSection(@RequestBody SectionDTO dto)
 	{
-		return sectionRepository.save(section);
+		return gradeBookService.saveSection(dto);
 	}
 }

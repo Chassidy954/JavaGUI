@@ -3,7 +3,6 @@ package com.gradebookProject.gradebookbackend.repositories;
 import com.gradebookProject.gradebookbackend.entities.Grade;
 import com.gradebookProject.gradebookbackend.entities.Student;
 import com.gradebookProject.gradebookbackend.entities.Assignment;
-import com.gradebookProject.gradebookbackend.entities.AssignmentId;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -3,6 +3,8 @@
 package com.gradebookProject.gradebookbackend.controllers;
 
 import com.gradebookProject.gradebookbackend.repositories.TeacherRepository;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
+import com.gradebookProject.gradebookbackend.dto.TeacherDTO;
 import com.gradebookProject.gradebookbackend.entities.Teacher;
 
 import java.util.List;
@@ -14,18 +16,19 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/teachers")
 public class TeacherController {
+	
 	@Autowired
-	private TeacherRepository teacherRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping
-	public List<Teacher> getAllTeachers()
+	public List<TeacherDTO> getAllTeachers()
 	{
-		return teacherRepository.findAll();
+		return gradeBookService.findAllTeachers();
 	}
 	
 	@PostMapping
-	public Teacher createTeacher(@RequestBody Teacher teacher)
+	public TeacherDTO createTeacher(@RequestBody TeacherDTO teacher)
 	{
-		return teacherRepository.save(teacher);
+		return gradeBookService.saveTeacher(teacher);
 	}
 }

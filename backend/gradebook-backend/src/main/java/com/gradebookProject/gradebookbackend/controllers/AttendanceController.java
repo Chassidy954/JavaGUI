@@ -1,7 +1,7 @@
 package com.gradebookProject.gradebookbackend.controllers;
 
-import com.gradebookProject.gradebookbackend.entities.Attendance;
-import com.gradebookProject.gradebookbackend.repositories.AttendanceRepository;
+import com.gradebookProject.gradebookbackend.dto.AttendanceDTO;
+import com.gradebookProject.gradebookbackend.service.GradebookService;
 
 import java.util.List;
 
@@ -14,17 +14,17 @@ import org.springframework.web.bind.annotation.*;
 public class AttendanceController {
 	
 	@Autowired
-	private AttendanceRepository attendanceRepository;
+	private GradebookService gradeBookService;
 	
 	@GetMapping
-	public List<Attendance> getAllAttendances()
+	public List<AttendanceDTO> getAllAttendances()
 	{
-		return attendanceRepository.findAll();
+		return gradeBookService.findAllAttendance();
 	}
 	
 	@PostMapping
-	public Attendance createAttendance(@RequestBody Attendance attendance)
+	public AttendanceDTO createAttendance(@RequestBody AttendanceDTO dto)
 	{
-		return attendanceRepository.save(attendance);
+		return gradeBookService.saveAttendance(dto);
 	}
 }

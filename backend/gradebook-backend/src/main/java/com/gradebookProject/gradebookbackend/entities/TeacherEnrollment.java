@@ -1,11 +1,13 @@
 package com.gradebookProject.gradebookbackend.entities;
 
 import jakarta.persistence.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Entity
 @Table(name = "teacherenrollments", uniqueConstraints = {
 		@UniqueConstraint(columnNames = {"teacher_id", "section_id"})
-}) //works!
+})
 public class TeacherEnrollment {
 	
 	@Id
@@ -14,11 +16,13 @@ public class TeacherEnrollment {
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn (name = "teacher_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Teacher teacher;
 	
 	
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn (name = "section_id", nullable = false)
+	@OnDelete(action = OnDeleteAction.CASCADE)
 	private Section section;
 	
 	public TeacherEnrollment() {}

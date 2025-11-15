@@ -1,10 +1,10 @@
 package model;
 
-public class Subject {
+public class BAKSubject {
     private final String subjectId;
     private final String subjectName;
 
-    public Subject(String subjectId, String subjectName) {
+    public BAKSubject(String subjectId, String subjectName) {
         this.subjectId = subjectId;
         this.subjectName = subjectName;
     }
