@@ -1,5 +1,8 @@
 package model;
 
+/**
+ * Model representing a single student record.
+ */
 public class Student {
 	private Integer id;
 	private String firstName;
