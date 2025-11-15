@@ -1,23 +1,44 @@
 package model;
 
 public class Section {
-    
-    private final int sectionId; 
-    private final String sectionName; 
-    private final int courseId; 
+	private Integer id;
+	private Integer courseId;
+	private String courseName;
+	private String sectionName;
+	
+	public Section() {}
 
-    public Section(int sectionId, String sectionName, int courseId) {
-        this.sectionId = sectionId;
-        this.sectionName = sectionName;
-        this.courseId = courseId;
-    }
+	public Integer getId() {
+		return id;
+	}
 
-    public int getSectionId() { return sectionId; }
-    public String getSectionName() { return sectionName; } 
-    public int getCourseId() { return courseId; } 
-    
-    @Override
-    public String toString() {
-        return sectionName;
-    }
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+	public Integer getCourseId() {
+		return courseId;
+	}
+
+	public void setCourseId(Integer courseId) {
+		this.courseId = courseId;
+	}
+
+	public String getSectionName() {
+		return sectionName;
+	}
+
+	public void setSectionName(String sectionName) {
+		this.sectionName = sectionName;
+	}
+
+	public String getCourseName() {
+		return courseName;
+	}
+
+	public void setCourseName(String courseName) {
+		this.courseName = courseName;
+	}
+	
+	
 }

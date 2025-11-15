@@ -1,27 +1,49 @@
 package model;
 
 public class Teacher {
-    private final String teacherId;
-    private final String firstName;
-    private final String lastName;
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	
+	public Teacher() {}
+	public Teacher(Integer id, String firstName, String lastName)
+	{
+		this.id = id;
+		this.firstName = firstName;
+		this.lastName = lastName;
+	}
+	
+	public Integer getId() {
+		return id;
+	}
 
-    public Teacher(String teacherId, String firstName, String lastName) {
-        this.teacherId = teacherId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-    }
 
-    // Getters for display
-    public String getTeacherId() { return teacherId; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-  
-   
-    @Override
-    public String toString() {
-        return "Teacher{" +
-               "id='" + teacherId + '\'' +
-               ", name='" + firstName + " " + lastName + 
-               '}';
-    }
+
+	public void setId(Integer id) {
+		this.id = id;
+	}
+
+
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+
+
+	public String getLastName() {
+		return lastName;
+	}
+
+
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
 }

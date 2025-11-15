@@ -26,6 +26,12 @@ public class StudentEnrollmentController {
 		return gradeBookService.findAllStudentEnrollments();
 	}
 	
+	@GetMapping("/sections/{sectionId}")
+	public List<StudentEnrollmentDTO> getEnrollmentsForSection(@PathVariable Integer sectionId)
+	{
+		return gradeBookService.findStudentEnrollmentsBySectionId(sectionId);
+	}
+	
 	@PostMapping //creates a new student enrollment
 	public StudentEnrollmentDTO createStudentEnrollment(@RequestBody StudentEnrollmentDTO studentEnrollment)
 	{

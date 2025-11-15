@@ -27,13 +27,21 @@ public class AuthService {
                 }
                 break;
 
-            case "admin":
-                if ("secure".equals(password)) {
-                    // Teacher 3: T003
-                    Teacher teacher3 = new Teacher("T003", "Mary", "Admin");
-                    return Optional.of(teacher3);
-                }
-                break;
+        // Define a valid username/password pair for testing
+        final String VALID_USERNAME = "teacher";
+        final String VALID_PASSWORD = "pass";
+
+        if (VALID_USERNAME.equals(username) && VALID_PASSWORD.equals(password)) {
+            // Success: Return a fully constructed Teacher model object
+            Teacher authenticatedTeacher = new Teacher(
+                1, 
+                "Jane", 
+                "Doe"
+            );
+            return Optional.of(authenticatedTeacher);
+        } else {
+            // Failure: Return an empty Optional
+            return Optional.empty();
         }
 
         // Failure: If the username/password combination didn't match any case, return empty

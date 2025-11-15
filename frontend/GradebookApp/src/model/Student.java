@@ -4,31 +4,29 @@ package model;
  * Model representing a single student record.
  */
 public class Student {
-    
-    private final int studentId;
-    private final String firstName;
-    private final String lastName;
-    
-    // hold the calculated average for the current section
-    private double calculatedAverage; // added for easier grade display
-
-    public Student(int studentId, String firstName, String lastName) {
-        this.studentId = studentId;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.calculatedAverage = 0.0; // Default to 0.0
-    }
-
-    public int getStudentId() { return studentId; }
-    public String getFirstName() { return firstName; }
-    public String getLastName() { return lastName; }
-    public String getFullName() { return firstName + " " + lastName; } 
-
-    public String getDisplayAverage() {
-        return String.format("%.2f%%", calculatedAverage);
-    }
-
-    public void setCalculatedAverage(double calculatedAverage) {
-        this.calculatedAverage = calculatedAverage;
-    }
+	private Integer id;
+	private String firstName;
+	private String lastName;
+	
+	public Student() {}
+	
+	public Integer getId() {
+		return id;
+	}
+	public void setId(Integer id) {
+		this.id = id;
+	}
+	public String getFirstName() {
+		return firstName;
+	}
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+	public String getLastName() {
+		return lastName;
+	}
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+	
 }

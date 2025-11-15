@@ -20,10 +20,12 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors; 
 
-import model.Section; 
-import model.Student; 
-import model.Teacher; 
-import model.Grade; 
+import model.BAKSubject;
+import model.BAKStudent; 
+import model.BAKTeacher;
+import model.Section;
+import model.Student;
+import model.Teacher;
 import service.ClassService; 
 
 
@@ -63,19 +65,20 @@ public class DashboardController {
         if (teacher != null) {
             String fullName = teacher.getFirstName() + " " + teacher.getLastName();
             teacherNameLabel.setText("Welcome, " + fullName);
-            loadClassList(teacher.getTeacherId());
+            loadClassList(teacher.getId());
         }
     }
 
-    private void loadClassList(String teacherId) {
+    private void loadClassList(Integer teacherId) {
         List<Section> classes = classService.getClassesForTeacher(teacherId);
         classListView.getItems().addAll(classes);
         
+        // Set the display format for the Subject model (shows SubjectName in the list)
         classListView.setCellFactory(lv -> new javafx.scene.control.ListCell<Section>() {
             @Override
-            protected void updateItem(Section section, boolean empty) {
-                super.updateItem(section, empty);
-                setText(empty ? null : section.getSectionName());
+            protected void updateItem(Section subject, boolean empty) {
+                super.updateItem(subject, empty);
+                setText(empty ? null : subject.getSectionName());
             }
         });
         
@@ -93,7 +96,7 @@ public class DashboardController {
         rosterTable.setPrefHeight(500);
 
         TableColumn<Student, Integer> idCol = new TableColumn<>("ID");
-        idCol.setCellValueFactory(new PropertyValueFactory<>("studentId"));
+        idCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         idCol.setPrefWidth(50);
         
         TableColumn<Student, String> firstNameCol = new TableColumn<>("First Name");
@@ -116,22 +119,12 @@ public class DashboardController {
         rosterTable.setItems(studentData);
     }
 
-    private void loadClassDetails(Section section) {
-        contentHeaderLabel.setText(section.getSectionName() + " Roster & Grades");
+    private void loadClassDetails(Section subject) {
+        // 1. Update the header
+        contentHeaderLabel.setText(subject.getSectionName() + " Roster & Grades");
         
-        // Correct conversion of int ID to String for service call
-        String sectionIdString = String.valueOf(section.getSectionId());
-        
-        // 1. Fetch Roster and All Grades for the Section
-        List<Student> students = classService.getRosterForClass(sectionIdString);
-        List<Grade> allGrades = classService.getGradesForSection(section.getSectionId()); // Assumes method takes int
-        
-        // 2. PROCESSING AND CALCULATION LOGIC
-        for (Student student : students) {
-            // Filter the full list of grades to get only the current student's grades
-            List<Grade> studentGrades = allGrades.stream()
-                .filter(grade -> grade.getStudentId() == student.getStudentId())
-                .collect(Collectors.toList());
+        // 2. Fetch the student roster from the service
+        List<Student> students = classService.getRosterForClass(subject.getId());
 
             // Calculate average using the service layer method
             double average = classService.calculateUnweightedAverage(studentGrades);
