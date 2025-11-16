@@ -61,6 +61,7 @@ public class GradebookServiceImpl implements GradebookService {
 	@Autowired
 	private TeacherEnrollmentMapper teacherEnrollmentMapper;
 	
+	//students
 	
 	@Override
 	public List<StudentDTO> findAllStudents() {
@@ -158,6 +159,7 @@ public class GradebookServiceImpl implements GradebookService {
 			.collect(Collectors.toList());
 	}
 	
+	
 	// attendance
 	@Override
 	public List<AttendanceDTO> findAllAttendance()
@@ -175,6 +177,14 @@ public class GradebookServiceImpl implements GradebookService {
 				.collect(Collectors.toList());
 	}
 	
+	
+	@Override
+	public Optional<AttendanceDTO> findAttendanceById(Integer id) 
+	{
+	    return attendanceRepository.findById(id)
+	            .map(attendanceMapper::convertToDTO);
+	}	
+	
 	@Override
 	public AttendanceDTO saveAttendance(AttendanceDTO dto)
 	{
@@ -187,6 +197,28 @@ public class GradebookServiceImpl implements GradebookService {
 	}
 	
 	@Override
+	public AttendanceDTO updateAttendance(Integer id, AttendanceDTO dto) 
+	{
+		if (dto.getAttendanceDate() == null) 
+		{
+	        throw new IllegalArgumentException("Attendance date is required!");
+	    }
+	    if (dto.getStatus() == null || dto.getStatus().trim().isEmpty())
+	    {
+	        throw new IllegalArgumentException("Attendance status is required!");
+	    }
+		
+	    Attendance existingAttendance = attendanceRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Could not find attendance with id: " + id));
+	    
+	    existingAttendance.setAttendanceDate(dto.getAttendanceDate());
+	    existingAttendance.setStatus(dto.getStatus());
+	    
+	    existingAttendance = attendanceRepository.save(existingAttendance);
+	    return attendanceMapper.convertToDTO(existingAttendance);
+	}
+	
+	@Override
 	public void deleteAttendance(Integer attendanceId)
 	{
 		if (!attendanceRepository.existsById(attendanceId))
@@ -195,6 +227,7 @@ public class GradebookServiceImpl implements GradebookService {
 		attendanceRepository.deleteById(attendanceId);
 	}
 
+	
 	//assignments
 	
 	@Override
@@ -236,17 +269,47 @@ public class GradebookServiceImpl implements GradebookService {
 				.map(assignmentMapper::convertToDTO);
 	}
 	
+	@Override
+	public AssignmentDTO updateAssignment(Integer id, AssignmentDTO dto) {
+		if (dto.getAssignmentName() == null || dto.getAssignmentName().trim().isEmpty()) 
+		{
+	        throw new IllegalArgumentException("Assignment name is required!");
+	    }
+	    if (dto.getMaxScore() == null || dto.getMaxScore() <= 0) 
+	    {
+	        throw new IllegalArgumentException("Maximum score must be greater than 0!");
+	    }
+		
+		Assignment existingAssignment = assignmentRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Could not find assignment with id: " + id));
+	    
+	    existingAssignment.setAssignmentName(dto.getAssignmentName());
+	    existingAssignment.setMaxScore(dto.getMaxScore());
+	    
+	    existingAssignment = assignmentRepository.save(existingAssignment);
+	    return assignmentMapper.convertToDTO(existingAssignment);
+	}
+	
 	//grades
 
 	@Override
-	public Optional<GradeDTO> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId) {
+	public Optional<GradeDTO> findGradeById(Integer id) 
+	{
+	    return gradeRepository.findById(id)
+	            .map(gradeMapper::convertToDTO);
+	}
+	
+	@Override
+	public Optional<GradeDTO> findGradeByStudentAndAssignment(Integer studentId, Integer assignmentId) 
+	{
 		return gradeRepository.findByStudentStudentIdAndAssignmentId(studentId, assignmentId)
 				.map(gradeMapper::convertToDTO);
 
 	}
 
 	@Override
-	public GradeDTO updateGrade(Integer gradeId, Double score, String comments) {
+	public GradeDTO updateGrade(Integer gradeId, Double score, String comments) 
+	{
 		
 		Grade grade = gradeRepository.findById(gradeId)
 				.orElseThrow(() -> new RuntimeException("Grade not found with id: " + gradeId));
@@ -362,6 +425,25 @@ public class GradebookServiceImpl implements GradebookService {
 	}
 	
 	@Override
+	public CourseDTO updateCourse(Integer id, CourseDTO dto) 
+	{
+	    if (dto.getCourseName() == null || dto.getCourseName().trim().isEmpty()) 
+	    {
+	        throw new IllegalArgumentException("Course name is required!");
+	    }
+	    
+	    Course existingCourse = courseRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Could not find course with id: " + id));
+	    
+	    existingCourse.setCourseName(dto.getCourseName());
+	    
+	    existingCourse = courseRepository.save(existingCourse);
+	    return courseMapper.convertToDTO(existingCourse);
+	}
+	
+	//sections
+	
+	@Override
 	public SectionDTO saveSection(SectionDTO dto)
 	{
 		Section section = sectionMapper.convertToEntity(dto);
@@ -393,6 +475,25 @@ public class GradebookServiceImpl implements GradebookService {
 		return sectionRepository.findById(sectionId)
 				.map(sectionMapper::convertToDTO);
 	}
+	
+	@Override
+	public SectionDTO updateSection(Integer id, SectionDTO dto) {
+		
+	    if (dto.getSectionName() == null || dto.getSectionName().trim().isEmpty()) 
+	    {
+	        throw new IllegalArgumentException("Section name is required!");
+	    }
+	    
+	    Section existingSection = sectionRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Could not find section with id: " + id));
+	    
+	    existingSection.setSectionName(dto.getSectionName());
+	 
+	    
+	    existingSection = sectionRepository.save(existingSection);
+	    return sectionMapper.convertToDTO(existingSection);
+	}
+	
 	
 	// teacher methods
 	@Override
@@ -427,6 +528,28 @@ public class GradebookServiceImpl implements GradebookService {
 	{
 		return teacherRepository.findById(teacherId)
 				.map(teacherMapper::convertToDTO);
+	}
+	
+	@Override
+	public TeacherDTO updateTeacher(Integer id, TeacherDTO dto) 
+	{
+	    if (dto.getFirstName() == null || dto.getFirstName().trim().isEmpty())
+	    {
+	        throw new IllegalArgumentException("First name is required!");
+	    }
+	    if (dto.getLastName() == null || dto.getLastName().trim().isEmpty()) 
+	    {
+	        throw new IllegalArgumentException("Last name is required!");
+	    }
+	    
+	    Teacher existingTeacher = teacherRepository.findById(id)
+	            .orElseThrow(() -> new RuntimeException("Could not find teacher with id: " + id));
+	    
+	    existingTeacher.setFirstName(dto.getFirstName());
+	    existingTeacher.setLastName(dto.getLastName());
+	    
+	    existingTeacher = teacherRepository.save(existingTeacher);
+	    return teacherMapper.convertToDTO(existingTeacher);
 	}
 	
 	// teacher enrollment methods
