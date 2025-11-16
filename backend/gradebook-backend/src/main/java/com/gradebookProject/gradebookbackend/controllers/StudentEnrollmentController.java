@@ -4,10 +4,12 @@ package com.gradebookProject.gradebookbackend.controllers;
 
 import com.gradebookProject.gradebookbackend.repositories.StudentEnrollmentRepository;
 import com.gradebookProject.gradebookbackend.service.GradebookService;
+import com.gradebookProject.gradebookbackend.dto.SectionDTO;
 import com.gradebookProject.gradebookbackend.dto.StudentEnrollmentDTO;
 import com.gradebookProject.gradebookbackend.entities.StudentEnrollment;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,6 +28,14 @@ public class StudentEnrollmentController {
 		return gradeBookService.findAllStudentEnrollments();
 	}
 	
+	//getmapping for id
+	@GetMapping("/{id}")
+	public StudentEnrollmentDTO getStudentEnrollmentById(@PathVariable Integer id)
+	{
+		return gradeBookService.findStudentEnrollmentById(id)
+				.orElseThrow(() -> new RuntimeException("Could not find Student Enrollment with id: " + id));
+	}
+	
 	@GetMapping("/sections/{sectionId}")
 	public List<StudentEnrollmentDTO> getEnrollmentsForSection(@PathVariable Integer sectionId)
 	{
@@ -37,4 +47,15 @@ public class StudentEnrollmentController {
 	{
 		return gradeBookService.saveStudentEnrollment(studentEnrollment);
 	}
+	
+	//deletemapping
+	@DeleteMapping("/{id}")
+	public void deleteStudentEnrollment(@PathVariable Integer id)
+	{
+		gradeBookService.deleteStudentEnrollment(id);
+	}
 }
+
+	
+
+	
