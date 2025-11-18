@@ -32,6 +32,7 @@ public interface GradebookService {
 	// assignment CRUD methods
 	List<AssignmentDTO> findAllAssignments();
 	Optional<AssignmentDTO> findAssignmentById(Integer id);
+	List<AssignmentDTO> findAssignmentsBySectionId(Integer id);
 	AssignmentDTO saveAssignment(AssignmentDTO assignment);
 	AssignmentDTO updateAssignment(Integer id, AssignmentDTO dto);
 	void deleteAssignment(Integer assignmentId);
