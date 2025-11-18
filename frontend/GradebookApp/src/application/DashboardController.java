@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors; 
 
-import model.BAKSubject;
-import model.BAKStudent; 
-import model.BAKTeacher;
+import model.Grade;
 import model.Section;
 import model.Student;
 import model.Teacher;
@@ -110,7 +108,7 @@ public class DashboardController {
         // Average Grade Column
         TableColumn<Student, String> avgGradeCol = new TableColumn<>("Avg Grade");
         // Binds to the new display getter that performs rounding
-        avgGradeCol.setCellValueFactory(new PropertyValueFactory<>("displayAverage"));
+        avgGradeCol.setCellValueFactory(new PropertyValueFactory<>("average"));
         avgGradeCol.setPrefWidth(100);
         avgGradeCol.setStyle("-fx-alignment: CENTER-RIGHT;"); 
         
@@ -125,12 +123,15 @@ public class DashboardController {
         
         // 2. Fetch the student roster from the service
         List<Student> students = classService.getRosterForClass(subject.getId());
-
+        for (Student student : students) {
+        	List<Grade> studentGrades = classService.getGradesForStudent(student.getId());
             // Calculate average using the service layer method
             double average = classService.calculateUnweightedAverage(studentGrades);
             
             // Set the calculated average on the Student model (mutator method)
-            student.setCalculatedAverage(average); 
+            student.setAverage(average); // REWORK THIS. 
+            // Students should not have an average like this since it's per section.
+            // I've only added this to fix the error from "setCalculatedAverage", which appeared randomly.
         }
         
         // 3. Update Table View with processed students
@@ -141,7 +142,7 @@ public class DashboardController {
             contentArea.getChildren().add(0, contentHeaderLabel);
         }
         
-        System.out.println("Roster for " + section.getSectionName() + " loaded successfully with calculated averages.");
+        System.out.println("Roster for " + subject.getSectionName() + " loaded successfully with calculated averages.");
     }
 
     // Action handler for login

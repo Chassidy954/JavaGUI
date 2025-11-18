@@ -8,6 +8,8 @@ public class Student {
 	private String firstName;
 	private String lastName;
 	
+	private double average; // Used in DashboardController. SHOULD BE REWRITTEN
+	
 	public Student() {}
 	
 	public Integer getId() {
@@ -27,6 +29,14 @@ public class Student {
 	}
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+	
+	public double getAverage() {
+		return average;
+	}
+	
+	public void setAverage(double average) {
+		this.average = average;
 	}
 	
 }

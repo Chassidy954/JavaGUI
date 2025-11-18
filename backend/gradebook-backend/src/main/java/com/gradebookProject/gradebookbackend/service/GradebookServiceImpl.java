@@ -290,6 +290,13 @@ public class GradebookServiceImpl implements GradebookService {
 	    return assignmentMapper.convertToDTO(existingAssignment);
 	}
 	
+	@Override
+	public List<AssignmentDTO> findAssignmentsBySectionId(Integer id)
+	{
+		return assignmentRepository.findBySectionSectionId(id).stream()
+				.map(assignmentMapper::convertToDTO)
+				.collect(Collectors.toList());
+	}
 	//grades
 
 	@Override

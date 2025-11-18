@@ -33,6 +33,12 @@ public class AssignmentController {
 				.orElseThrow(() -> new RuntimeException("Could not find Assignment with id: " + id));
 	}
 	
+	@GetMapping("/section/{id}")
+	public List<AssignmentDTO> getBySectionId(@PathVariable Integer id)
+	{
+		return gradeBookService.findAssignmentsBySectionId(id);
+	}
+	
 	//putMapping
 	@PutMapping("/{id}")
 	public AssignmentDTO updateAssignment(@PathVariable Integer id, @RequestBody AssignmentDTO dto)

@@ -1,6 +1,8 @@
 package service;
 
 import model.TeacherEnrollment;
+import model.Assignment;
+import model.Grade;
 import model.Section;
 import model.Student;
 import model.StudentEnrollment;
@@ -100,38 +102,90 @@ public class ClassService {
     
     // Simulates fetching all assignments for a class
     public List<Assignment> getAssignmentsForSection(int sectionId) {
-        // Assignment constructor: (sectionId, assignmentName, assignmentType, maxPoints)
-        return Arrays.asList(
-            new Assignment(sectionId, "Homework 1", "HOMEWORK", 100.0),
-            new Assignment(sectionId, "Final Exam", "FINAL_EXAM", 200.0),
-            new Assignment(sectionId, "Midterm Exam", "EXAM", 150.0)
-        );
+        HttpRequest request = HttpRequest.newBuilder()
+        		.uri(URI.create("http://localhost:8080/api/assignments/sections/" + sectionId))
+        		.GET()
+        		.build();
+        try {
+        	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        	if (response.statusCode() == 200)
+        	{
+        		List<Assignment> assignments = mapper.readValue(response.body(), new TypeReference<List<Assignment>>() {});
+        		return assignments.stream()
+        				.map(assignment -> {
+        					Assignment asnm = new Assignment();
+        					asnm.setId(assignment.getId());
+        					asnm.setAssignmentName(assignment.getAssignmentName());
+        					asnm.setAssignmentType(assignment.getAssignmentType());
+        					asnm.setSectionId(assignment.getSectionId());
+        					asnm.setSectionName(assignment.getSectionName());
+        					asnm.setMaxScore(assignment.getMaxScore());
+        					return asnm;
+        				})
+        				.collect(Collectors.toList());
+        	}
+        	else
+        	{
+        		System.out.println("Error: status code " + response.statusCode());
+        		return List.of();
+        	}
+        } catch (Exception e)
+        {
+        	e.printStackTrace();
+        	return List.of();
+        }
     }
     
+    
+    private List<Grade> fetchGradesByUrl(String url)
+    {
+    	HttpRequest request = HttpRequest.newBuilder()
+        		.uri(URI.create(url))
+        		.GET()
+        		.build();
+        try {
+        	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        	if (response.statusCode() == 200)
+        	{
+        		List<Grade> myGrades = mapper.readValue(response.body(), new TypeReference<List<Grade>>() {});
+        		return myGrades.stream()
+        				.map(oldGrade -> {
+        					Grade grade = new Grade();
+        					grade.setId(oldGrade.getId());
+        					grade.setLetterGrade(oldGrade.getLetterGrade());
+        					grade.setPercentage(oldGrade.getPercentage());
+        					grade.setScore(oldGrade.getScore());
+        					grade.setComments(oldGrade.getComments());
+        					grade.setAssignmentId(oldGrade.getAssignmentId());
+        					grade.setAssignmentName(oldGrade.getAssignmentName());
+        					grade.setStudentId(oldGrade.getStudentId());
+        					grade.setStudentName(oldGrade.getStudentName());
+        					return grade;
+        				})
+        				.collect(Collectors.toList());
+        	}
+        	else
+        	{
+        		System.out.println("Error: status code " + response.statusCode());
+        		return List.of();
+        	}
+        } catch (Exception e)
+        {
+        	e.printStackTrace();
+        	return List.of();
+        }
+    }
     // Simulates fetching all grades for a specific section
     public List<Grade> getGradesForSection(int sectionId) {
-        List<Grade> grades = new ArrayList<>();
-        
-        // Simulating different grades based on sectionId for realistic results
-        if (sectionId == 1101) { // Algebra I: High Scores
-            grades.add(new Grade(1, 2001, "Homework 1", 95.0, 100.0));
-            grades.add(new Grade(2, 2001, "Final Exam", 185.0, 200.0));
-            grades.add(new Grade(3, 2002, "Homework 1", 100.0, 100.0));
-            grades.add(new Grade(4, 2003, "Midterm Exam", 145.0, 150.0));
-            
-        } else if (sectionId == 1102) { // CSCI 1102: Mixed Scores
-            grades.add(new Grade(5, 2001, "Homework 1", 60.0, 100.0));
-            grades.add(new Grade(6, 2002, "Final Exam", 125.0, 200.0));
-            grades.add(new Grade(7, 2003, "Homework 1", 85.0, 100.0));
-            grades.add(new Grade(8, 2004, "Midterm Exam", 90.0, 150.0));
-
-        } else if (sectionId == 1103) { // Hospitality: Low Scores
-            grades.add(new Grade(9, 2001, "Homework 1", 50.0, 100.0));
-            grades.add(new Grade(10, 2004, "Final Exam", 100.0, 200.0));
-            
-        }
-        
-        return grades;
+        String url = "http://localhost:8080/api/grades/section/" + sectionId;
+        return fetchGradesByUrl(url);
+    }
+    
+    // Fetch all grades for a given student
+    public List<Grade> getGradesForStudent(int studentId)
+    {
+    	String url = "http://localhost:8080/api/grades/student/" + studentId;
+    	return fetchGradesByUrl(url);
     }
     
     /**
@@ -148,7 +202,7 @@ public class ClassService {
 
         for (Grade grade : studentGrades) {
             totalPointsEarned += grade.getScore();
-            totalMaxPoints += grade.getMaxScore();
+            totalMaxPoints += (grade.getScore() / grade.getPercentage());
         }
 
         if (totalMaxPoints <= 0) {

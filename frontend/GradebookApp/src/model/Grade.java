@@ -62,6 +62,8 @@ public class Grade {
 	}
 
 	public void setPercentage(double percentage) {
+		if (percentage > 1)
+			percentage /= 100;
 		this.percentage = percentage;
 	}
 
