@@ -1,0 +1,105 @@
+
+/* Color Scheme Documentation:
+   Primary Action/Vibrant Color (Emerald): #2ECC71
+   Secondary Action/Focus Color (Zomp): #16A085  
+   Dark Text/Base Color (Charcoal): #34495E
+   Light Background Color (Anti-flash White): #F4F6F6
+   Card Background/Pure White: #FFFFFF
+   Subtle Gray Color: #AAB7B8
+   
+   Font Families:
+   Heading: "Segoe UI", "Calibri", "System"
+   Body: "Calibri", "Arial", "System"
+*/
+
+/* Apply the light background to the main scene */
+.background {
+    -fx-background-color: #F4F6F6;
+}
+
+/* Class for the primary application title/logo */
+.h1-title {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495E;
+}
+
+/* Class for section headings (e.g., "Agent Login") */
+.h2-section {
+    -fx-font-family: "Segoe UI";
+    -fx-font-size: 24px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #34495E;
+}
+
+/* Base style for all standard text labels */
+.label {
+    -fx-font-family: "Calibri";
+    -fx-font-size: 14px;
+    -fx-text-fill: #34495E;
+}
+
+/* Style for subtle helper text, placeholders, or footers */
+.label-subtle {
+    -fx-text-fill: #AAB7B8;
+    -fx-font-size: 12px;
+}
+
+
+/* Style for the main container holding the login form */
+.login-card {
+    -fx-background-color: #FFFFFF;
+    -fx-background-radius: 12px; 
+    -fx-padding: 40px;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 15, 0, 0, 5);
+}
+
+/* Style for Text Fields and Password Fields */
+.text-field, .password-field {
+    -fx-font-family: "Calibri";
+    -fx-font-size: 14px;
+    -fx-prompt-text-fill: #AAB7B8;
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: #E0E0E0;
+    -fx-border-radius: 5px;
+    -fx-border-width: 1px;
+    -fx-padding: 10px 12px;
+}
+
+/* Focus state: Border color changes to Zomp when user clicks the field */
+.text-field:focused, .password-field:focused {
+    -fx-border-color: #16A085;
+    -fx-border-width: 2px;
+}
+
+/* Main "Log In" button style */
+.button-primary {
+    -fx-background-color: #2ECC71;
+    -fx-text-fill: #FFFFFF;
+    -fx-font-family: "Segoe UI";
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-background-radius: 5px;
+    -fx-padding: 12px 25px;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for the main button */
+.button-primary:hover {
+    -fx-background-color: #27ae60; /* Slightly darker emerald */
+}
+
+/* Style for link buttons (like "Sign up" or "Forgot Password"), can be removed if we end up not adding these. */
+.button-link {
+    -fx-background-color: transparent;
+    -fx-text-fill: #16A085;
+    -fx-font-size: 14px;
+    -fx-underline: true;
+    -fx-cursor: hand;
+}
+
+/* Hover effect for link buttons, can also be removed if we dont add link buttons */
+.button-link:hover {
+    -fx-text-fill: #138a6d; /* Slightly darker zomp */
+}
