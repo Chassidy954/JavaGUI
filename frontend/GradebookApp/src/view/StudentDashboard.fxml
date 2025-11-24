@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<BorderPane fx:id="rootPane" prefHeight="650.0" prefWidth="900.0" stylesheets="@../application/application.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.StudentDashboardController">
+
+   <top>
+      <HBox fx:id="headerBar" alignment="CENTER_LEFT" spacing="20.0" styleClass="header-bar">
+         <padding>
+            <Insets bottom="15.0" left="20.0" right="20.0" top="15.0" />
+         </padding>
+         <children>
+            <Label styleClass="app-title" text="EduTracker" textFill="WHITE" />
+            <Separator orientation="VERTICAL" />
+            <Label fx:id="studentNameLabel" style="-fx-font-size: 14px;" text="Student Dashboard" />
+            <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+               <Button onAction="#handleLogout" style="-fx-background-color: #dc3545; -fx-text-fill: white;" text="Logout" />
+            </HBox>
+         </children>
+      </HBox>
+   </top>
+
+   <center>
+      <SplitPane dividerPositions="0.25">
+         <items>
+            <VBox spacing="10.0">
+               <padding>
+                  <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+               </padding>
+               <Label styleClass="h2-section" text="My Classes" />
+               <ListView fx:id="classListView" VBox.vgrow="ALWAYS" />
+            </VBox>
+
+            <VBox fx:id="contentArea" spacing="10.0">
+               <padding>
+                  <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+               </padding>
+
+               <HBox alignment="CENTER_LEFT" spacing="15.0">
+                  <Label fx:id="classNameLabel" styleClass="h1-title" text="Select a Class" />
+                  <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
+                     <Label text="Overall Grade: " style="-fx-font-weight: bold; -fx-font-size: 16px;"/>
+                     <Label fx:id="overallGradeLabel" text="--" style="-fx-font-size: 16px;"/>
+                  </HBox>
+               </HBox>
+
+               <Separator />
+
+               <Label styleClass="h2-section" text="My Assignments" />
+               <TableView fx:id="gradesTable" prefHeight="200.0" VBox.vgrow="ALWAYS" styleClass="roster-table"/>
+
+               <Label styleClass="h2-section" text="My Attendance" />
+               <TableView fx:id="attendanceTable" prefHeight="150.0" VBox.vgrow="ALWAYS" styleClass="roster-table"/>
+
+            </VBox>
+         </items>
+      </SplitPane>
+   </center>
+</BorderPane>

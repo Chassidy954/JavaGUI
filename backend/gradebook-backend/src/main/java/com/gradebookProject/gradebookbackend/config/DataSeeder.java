@@ -86,14 +86,17 @@ public class DataSeeder implements CommandLineRunner {
             Assignment hw1 = new Assignment("Homework 1", "HOMEWORK", algebra, 100);
             Assignment test1 = new Assignment("Test 1", "TEST", algebra, 100);
             Assignment hw1_csci = new Assignment("Homework 1", "HOMEWORK", csci101, 100);
+            Assignment hw2_csci = new Assignment("Homework 2", "HOMEWORK", csci101, 100);
             Assignment cla1 = new Assignment("Forgetting HR", "CLA", hospitality, 100);
-            assignmentRepository.saveAll(List.of(hw1, test1, hw1_csci, cla1));
+            assignmentRepository.saveAll(List.of(hw1, test1, hw1_csci, hw2_csci, cla1));
 
             // Create Enrollments (the junction)
             StudentEnrollment enroll1 = new StudentEnrollment(s1, algebra);
             StudentEnrollment enroll2 = new StudentEnrollment(s2, algebra);
+            StudentEnrollment enroll2_alt = new StudentEnrollment(s2, csci101);
             StudentEnrollment enroll3 = new StudentEnrollment(s3, hospitality);
-            studentEnrollmentRepository.saveAll(List.of(enroll1, enroll2, enroll3));
+            StudentEnrollment enroll3_alt = new StudentEnrollment(s3, csci101);
+            studentEnrollmentRepository.saveAll(List.of(enroll1, enroll2, enroll2_alt, enroll3, enroll3_alt));
             
             TeacherEnrollment tEn1 = new TeacherEnrollment(t1, algebra);
             TeacherEnrollment tEn2 = new TeacherEnrollment(t2, csci101);
@@ -104,14 +107,18 @@ public class DataSeeder implements CommandLineRunner {
             // Create Grades
             Grade g1 = new Grade(s1, hw1, 95.0, "Good work");
             Grade g2 = new Grade(s2, hw1, 82.0, "Needs improvement");
+            Grade g2_isaac_csci = new Grade(s2, hw1_csci, 100.0, "Nerd");
             Grade g3 = new Grade(s3, cla1, 99.5, "You're a natural!");
-            gradeRepository.saveAll(List.of(g1, g2, g3));
+            Grade g3_jim = new Grade(s3, hw1_csci, 99.0, "Questionable, verbose, but genius.");
+            gradeRepository.saveAll(List.of(g1, g2, g2_isaac_csci, g3, g3_jim));
             
             // Create Attendance
             Attendance at1 = new Attendance(s1, algebra, LocalDate.now(), "PRESENT");
             Attendance at2 = new Attendance(s2, csci101, LocalDate.now(), "EXCUSED");
+            Attendance at2_alt = new Attendance(s2, algebra, LocalDate.now(), "PRESENT");
             Attendance at3 = new Attendance(s3, hospitality, LocalDate.now(), "TARDY");
-            attendanceRepository.saveAll(List.of(at1, at2, at3));
+            Attendance at3_alt = new Attendance(s3, csci101, LocalDate.now(), "PRESENT");
+            attendanceRepository.saveAll(List.of(at1, at2, at2_alt, at3, at3_alt));
 
             System.out.println("Database seeding complete.");
         } else {

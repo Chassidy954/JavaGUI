@@ -7,5 +7,8 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/JavaFx"/>
+	<classpathentry kind="lib" path="C:/Users/Fishl/Documents/GitHub/JavaGUI/frontend/GradebookApp/src/lib/jackson-annotations-2.20.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Fishl/Documents/GitHub/JavaGUI/frontend/GradebookApp/src/lib/jackson-core-2.20.0.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Fishl/Documents/GitHub/JavaGUI/frontend/GradebookApp/src/lib/jackson-databind-2.20.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

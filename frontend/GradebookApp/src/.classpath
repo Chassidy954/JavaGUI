@@ -10,5 +10,6 @@
 	<classpathentry kind="lib" path="lib/jackson-annotations-2.20.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-core-2.20.0.jar"/>
 	<classpathentry kind="lib" path="lib/jackson-databind-2.20.0.jar"/>
+	<classpathentry kind="lib" path="lib/jackson-datatype-jsr310-2.20.0.jar"/>
 	<classpathentry kind="output" path=""/>
 </classpath>
