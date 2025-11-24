@@ -6,214 +6,259 @@ import model.Grade;
 import model.Section;
 import model.Student;
 import model.StudentEnrollment;
+import model.Attendance;
 
 import java.util.List;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.SerializationFeature;
 
-/**
- * Service to handle business logic related to classes, students, and sections.
- * Currently returns simulated data, ready for replacement with API calls.
- */
 public class ClassService {
-	
-	private final HttpClient client = HttpClient.newHttpClient();
-	private final ObjectMapper mapper = new ObjectMapper();
-	
-    // Fetch all classes taught by a teacher
-    public List<Section> getClassesForTeacher(Integer teacherId)
-    {
-    	HttpRequest request = HttpRequest.newBuilder()
-    			.uri(URI.create("http://localhost:8080/api/teacherenrollments/teacher/" + teacherId))
-    			.GET()
-    			.build();
-    	
-    	try {
-    		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    		if (response.statusCode() == 200)
-    		{
-    			// Parse the JSON string into a list of enrollment objects
-    			List<TeacherEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<TeacherEnrollment>>() {});
-    			return enrollments.stream()
-    					.map(enrollment -> {
-    						Section section = new Section();
-    						section.setId(enrollment.getId());
-    						section.setCourseId(1);
-    						section.setCourseName("PLACEHOLDER");
-    						section.setSectionName(enrollment.getSectionName());
-    						
-    						return section;
-    					})
-    					.collect(Collectors.toList());
-    		}
-    		else 
-    		{
-    			System.out.println("Error: Status code " + response.statusCode());
-    			return List.of();
-    		}
-    		
-    	} catch (Exception e)
-    	{
-    		e.printStackTrace();
-    		return List.of();
-    	}
+
+    private final HttpClient client = HttpClient.newHttpClient();
+    private final String BASE_URL = "http://localhost:8080/api"; 
+
+    private final ObjectMapper mapper = new ObjectMapper()
+            .registerModule(new JavaTimeModule())
+            .disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS);
+
+    public List<Section> getClassesForTeacher(Integer teacherId) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/teacherenrollments/teacher/" + teacherId))
+                .GET().build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                List<TeacherEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<TeacherEnrollment>>() {});
+                return enrollments.stream().map(enrollment -> {
+                            Section section = new Section();
+                            section.setId(enrollment.getId());
+                            section.setCourseId(1);
+                            section.setCourseName("PLACEHOLDER");
+                            section.setSectionName(enrollment.getSectionName());
+                            return section;
+                        }).collect(Collectors.toList());
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
     }
-    
-    // Fetch the roster data for a given class
-    public List<Student> getRosterForClass(Integer classId)
-    {
-    	HttpRequest request = HttpRequest.newBuilder()
-    			.uri(URI.create("http://localhost:8080/api/studentenrollments/sections/" + classId))
-    			.GET()
-    			.build();
-    	try {
-    		HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-    		if (response.statusCode() == 200)
-    		{
-    			List<StudentEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<StudentEnrollment>>() {});
-    			return enrollments.stream()
-    					.map(enrollment -> {
-    						Student student = new Student();
-    						student.setId(enrollment.getStudentId());
-    						String[] nameData = enrollment.getStudentName().split(" ");
-    						student.setFirstName(nameData[0]);
-    						student.setLastName(nameData[1]);
-    						return student;
-    					})
-    					.collect(Collectors.toList());
-    		}
-    		else
-    		{
-    			System.out.println("Error: Status code " + response.statusCode());
-    			return List.of();
-    		}
-    		
-    	} catch (Exception e)
-    	{
-    		e.printStackTrace();
-    		return List.of();
-    	}
+
+    public List<Section> getClassesForStudent(Integer studentId) {
+        List<Attendance> records = getAttendanceForStudent(studentId);
+        Map<Integer, Section> uniqueSections = new HashMap<>();
+        for (Attendance att : records) {
+            if (att.getSectionId() != null && !uniqueSections.containsKey(att.getSectionId())) {
+                Section s = new Section();
+                s.setId(att.getSectionId());
+                s.setSectionName(att.getSectionName());
+                uniqueSections.put(att.getSectionId(), s);
+            }
+        }
+        return new ArrayList<>(uniqueSections.values());
     }
-    
-    // Simulates fetching all assignments for a class
+
+    public List<Student> getRosterForClass(Integer classId) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/studentenrollments/sections/" + classId))
+                .GET().build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                List<StudentEnrollment> enrollments = mapper.readValue(response.body(), new TypeReference<List<StudentEnrollment>>() {});
+                return enrollments.stream().map(enrollment -> {
+                            Student student = new Student();
+                            student.setId(enrollment.getStudentId());
+                            String[] nameData = enrollment.getStudentName().split(" ");
+                            student.setFirstName(nameData[0]);
+                            student.setLastName(nameData.length > 1 ? nameData[1] : "");
+                            return student;
+                        }).collect(Collectors.toList());
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
     public List<Assignment> getAssignmentsForSection(int sectionId) {
         HttpRequest request = HttpRequest.newBuilder()
-        		.uri(URI.create("http://localhost:8080/api/assignments/sections/" + sectionId))
-        		.GET()
-        		.build();
+                .uri(URI.create(BASE_URL + "/assignments/section/" + sectionId))
+                .GET()
+                .build();
         try {
-        	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        	if (response.statusCode() == 200)
-        	{
-        		List<Assignment> assignments = mapper.readValue(response.body(), new TypeReference<List<Assignment>>() {});
-        		return assignments.stream()
-        				.map(assignment -> {
-        					Assignment asnm = new Assignment();
-        					asnm.setId(assignment.getId());
-        					asnm.setAssignmentName(assignment.getAssignmentName());
-        					asnm.setAssignmentType(assignment.getAssignmentType());
-        					asnm.setSectionId(assignment.getSectionId());
-        					asnm.setSectionName(assignment.getSectionName());
-        					asnm.setMaxScore(assignment.getMaxScore());
-        					return asnm;
-        				})
-        				.collect(Collectors.toList());
-        	}
-        	else
-        	{
-        		System.out.println("Error: status code " + response.statusCode());
-        		return List.of();
-        	}
-        } catch (Exception e)
-        {
-        	e.printStackTrace();
-        	return List.of();
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return mapper.readValue(response.body(), new TypeReference<List<Assignment>>() {});
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
         }
     }
-    
-    
-    private List<Grade> fetchGradesByUrl(String url)
-    {
-    	HttpRequest request = HttpRequest.newBuilder()
-        		.uri(URI.create(url))
-        		.GET()
-        		.build();
-        try {
-        	HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-        	if (response.statusCode() == 200)
-        	{
-        		List<Grade> myGrades = mapper.readValue(response.body(), new TypeReference<List<Grade>>() {});
-        		return myGrades.stream()
-        				.map(oldGrade -> {
-        					Grade grade = new Grade();
-        					grade.setId(oldGrade.getId());
-        					grade.setLetterGrade(oldGrade.getLetterGrade());
-        					grade.setPercentage(oldGrade.getPercentage());
-        					grade.setScore(oldGrade.getScore());
-        					grade.setComments(oldGrade.getComments());
-        					grade.setAssignmentId(oldGrade.getAssignmentId());
-        					grade.setAssignmentName(oldGrade.getAssignmentName());
-        					grade.setStudentId(oldGrade.getStudentId());
-        					grade.setStudentName(oldGrade.getStudentName());
-        					return grade;
-        				})
-        				.collect(Collectors.toList());
-        	}
-        	else
-        	{
-        		System.out.println("Error: status code " + response.statusCode());
-        		return List.of();
-        	}
-        } catch (Exception e)
-        {
-        	e.printStackTrace();
-        	return List.of();
-        }
-    }
-    // Simulates fetching all grades for a specific section
-    public List<Grade> getGradesForSection(int sectionId) {
-        String url = "http://localhost:8080/api/grades/section/" + sectionId;
-        return fetchGradesByUrl(url);
-    }
-    
-    // Fetch all grades for a given student
-    public List<Grade> getGradesForStudent(int studentId)
-    {
-    	String url = "http://localhost:8080/api/grades/student/" + studentId;
-    	return fetchGradesByUrl(url);
-    }
-    
-    /**
-     * Calculates the unweighted average score for a student based on their grades.
-     * Defaults to 0.0 if no grades are found.
-     */
-    public double calculateUnweightedAverage(List<Grade> studentGrades) {
-        if (studentGrades == null || studentGrades.isEmpty()) {
-            return 0.0;
-        }
 
+    // Get assignment by ID
+    public Assignment getAssignmentById(int assignmentId) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/assignments/" + assignmentId))
+                .GET()
+                .build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return mapper.readValue(response.body(), Assignment.class);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private List<Grade> fetchGradesByUrl(String url) {
+        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return mapper.readValue(response.body(), new TypeReference<List<Grade>>() {});
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    public List<Grade> getGradesForStudent(int studentId) {
+        return fetchGradesByUrl(BASE_URL + "/grades/student/" + studentId);
+    }
+
+    public List<Attendance> getAttendanceForStudent(int studentId) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/attendance/student/" + studentId))
+                .GET().build();
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200) {
+                return mapper.readValue(response.body(), new TypeReference<List<Attendance>>() {}); 
+            } else {
+                return List.of();
+            }
+        } catch (Exception e) {
+            return List.of();
+        }
+    }
+
+    public double calculateUnweightedAverage(List<Grade> studentGrades) {
+        if (studentGrades == null || studentGrades.isEmpty()) return 0.0;
         double totalPointsEarned = 0;
         double totalMaxPoints = 0;
-
         for (Grade grade : studentGrades) {
             totalPointsEarned += grade.getScore();
-            totalMaxPoints += (grade.getScore() / grade.getPercentage());
+            if (grade.getPercentage() > 0) {
+                totalMaxPoints += (grade.getScore() / grade.getPercentage()); 
+            }
         }
-
-        if (totalMaxPoints <= 0) {
-            return 0.0;
-        }
-
+        if (totalMaxPoints <= 0) return 0.0;
         return (totalPointsEarned / totalMaxPoints) * 100.0;
     }
-    
-    // Simulates fetching attendance rate
-    public double getAttendanceRate(int studentId) {
-        return 92.5; 
+
+    public boolean deleteGrade(Integer gradeId) {
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(BASE_URL + "/grades/" + gradeId))
+                .DELETE()
+                .build();
+
+        try {
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            if (response.statusCode() == 200 || response.statusCode() == 204) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public Assignment addAssignment(Assignment newAssignment) {
+        try {
+            String json = mapper.writeValueAsString(newAssignment);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/assignments"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                return mapper.readValue(response.body(), Assignment.class);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Grade addGrade(Grade newGrade) {
+        try {
+            String json = mapper.writeValueAsString(newGrade);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/grades"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+            if (response.statusCode() == 200 || response.statusCode() == 201) {
+                return mapper.readValue(response.body(), Grade.class);
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean updateGrade(Grade grade) {
+        try {
+            String json = mapper.writeValueAsString(grade);
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(BASE_URL + "/grades/" + grade.getId())) 
+                    .header("Content-Type", "application/json")
+                    .PUT(HttpRequest.BodyPublishers.ofString(json))
+                    .build();
+
+            HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+            return (response.statusCode() == 200);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

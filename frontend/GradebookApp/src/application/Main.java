@@ -1,5 +1,5 @@
 package application;
-	
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -12,12 +12,12 @@ public class Main extends Application {
 		try {
 			// 1. Load FXML from the /view folder
 			Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-			
+
 			Scene scene = new Scene(root);
-			
+
 			// 2. Load CSS from the /application folder
 			scene.getStylesheets().add(getClass().getResource("/application/application.css").toExternalForm());
-			
+
 			primaryStage.setTitle("Gradebook Application");
 			primaryStage.setScene(scene);
 			primaryStage.show();
@@ -25,7 +25,7 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		launch(args);
 	}
